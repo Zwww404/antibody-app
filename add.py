@@ -19,7 +19,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 肿瘤免疫流式抗体库存系统</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 免疫流式抗体库存系统</h1>", unsafe_allow_html=True)
 
 DATA_FILE = "antibodies.csv"
 EXPECTED_COLS = ["Target", "Fluorophore", "Localization", "Clone", "Box_Location", "Status"]
