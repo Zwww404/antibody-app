@@ -237,11 +237,12 @@ st.markdown("""
     h2, h3 { font-weight: 600 !important; color: #1e293b !important; }
 
     /* ========================================================= */
-    /* 🚀 核心空间位移魔法：强行把整个左侧列向上提拉 11.5rem！ */
+    /* 🚀 核心空间位移魔法：无视底层引擎强制提拉整个左侧！ */
     /* ========================================================= */
-    [data-testid="column"]:first-child {
-        margin-top: -11.5rem !important; 
-        z-index: 999; /* 保证按钮浮在最上层，绝对可点击 */
+    [data-testid="column"]:nth-of-type(1) {
+        transform: translateY(-165px) !important; 
+        margin-bottom: -165px !important;
+        z-index: 999;
     }
 
     /* 💎 双按钮高级科技 UI */
