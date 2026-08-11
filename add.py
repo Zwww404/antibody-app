@@ -487,7 +487,7 @@ with col_left:
 <div style='display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; position: relative; z-index: 1;'>
 <div style='display: flex; align-items: center; gap: 8px;'>
 <div style='width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);'></div>
-<span style='font-size: 0.7rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.15em; text-transform: uppercase;'>System Architect</span>
+<span style='font-size: 0.8rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.15em; text-transform: uppercase;'>System Architect</span>
 </div>
 <span style='font-size: 1.2rem; opacity: 0.9;'>🧬</span>
 </div>
