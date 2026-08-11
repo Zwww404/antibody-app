@@ -231,7 +231,7 @@ with col_left:
     # 💎 专属定制：同步按钮高级 UI (强力穿透版)
     st.markdown("""
         <style>
-        # 核心秘籍：将左侧整体向上提拉，与右侧表格顶部精准平齐 */
+        /* 核心秘籍：将左侧整体向上提拉，与右侧表格顶部精准平齐 */
         [data-testid="column"]:first-child {
             margin-top: -3.5rem !important;
         }
