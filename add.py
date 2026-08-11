@@ -391,7 +391,7 @@ with col_left:
         st.write("")
         submitted_batch = st.form_submit_button("⚡ 确认扣减选定用量", use_container_width=True)
         
-       if submitted_batch:
+        if submitted_batch:
             if not selected_abs:
                 st.error("⚠️ 请先在上方选择你使用的抗体！")
             else:
