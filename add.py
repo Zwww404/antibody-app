@@ -141,7 +141,16 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 流式抗体管理系统</h1>", unsafe_allow_html=True)
+# st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 流式抗体管理系统</h1>", unsafe_allow_html=True)
+# 💎 顶部高亮专属开发者徽章
+st.markdown("""
+    <div style='text-align: center; margin-top: 1rem; margin-bottom: 2.5rem; position: relative;'>
+        <h1 style='color: #0f172a; margin-bottom: 0.8rem; font-weight: 800;'>🔬 肿瘤免疫流式抗体库存系统</h1>
+        <div style='display: inline-flex; align-items: center; background: linear-gradient(135deg, #4ecca3 0%, #45b894 100%); color: white; padding: 6px 18px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 4px 10px -2px rgba(78, 204, 163, 0.4); letter-spacing: 0.5px;'>
+            <span>⚡ Designed & Developed by ZJW</span>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
 
 DATA_FILE = "antibodies.csv"
 EXPECTED_COLS = ["Target", "Fluorophore", "Localization", "Clone", "Box_Location", "Status"]
@@ -348,11 +357,4 @@ with col_right:
         else:
             save_data(edited_df)
         st.rerun()
-# ==========================================
-# 🌟 4. 专属开发者页脚
-# ==========================================
-st.markdown("""
-    <div style="text-align: center; margin-top: 50px; padding: 20px; color: #94a3b8; font-size: 0.9rem; border-top: 1px solid #e2e8f0;">
-        Designed by <b>ZJW</b>  | <span style="font-size: 0.8rem;">V 1.0</span>
-    </div>
-""", unsafe_allow_html=True)
+
