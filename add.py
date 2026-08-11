@@ -476,35 +476,32 @@ with col_left:
        #     <p style='font-size: 0.75rem; font-weight: 600; color: #64748b; margin: 0;'>Flow Cytometry Inventory V1.0</p>
       #  </div>
    # """, unsafe_allow_html=True)
-# ==========================================
-# ==========================================
-# ==========================================
-    # 💎 最底部：ZJW 专属系统架构师铭牌 (Apple WWDC 风格)
+    
+    # 💎 最底部：ZJW 专属系统架构师铭牌 (GitHub 暗黑极客风 - 防报错顶格版)
     # ==========================================
     st.markdown("""
-    <div style='position: relative; background: #ffffff; border: 1px solid rgba(229, 231, 235, 0.5); border-radius: 20px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 25px 50px -12px rgba(0, 0, 0, 0.08); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;'>
-<!-- 背景弥散光晕 -->
-<div style='position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: rgba(59, 130, 246, 0.15); filter: blur(40px); border-radius: 50%;'></div>
-<div style='position: absolute; bottom: -40px; left: -40px; width: 120px; height: 120px; background: rgba(16, 185, 129, 0.15); filter: blur(40px); border-radius: 50%;'></div>
+<div style='position: relative; background: #0f172a; border: 1px solid #1e293b; border-radius: 20px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;'>
+<!-- 科技网格背景 -->
+<div style='position: absolute; inset: 0; background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 16px 16px; opacity: 0.3;'></div>
 <!-- 顶部状态栏 -->
 <div style='display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; position: relative; z-index: 1;'>
 <div style='display: flex; align-items: center; gap: 8px;'>
-<div style='width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);'></div>
-<span style='font-size: 0.7rem; font-weight: 700; color: #64748b; letter-spacing: 0.15em; text-transform: uppercase;'>System Architect</span>
+<div style='width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);'></div>
+<span style='font-size: 0.7rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.15em; text-transform: uppercase;'>System Architect</span>
 </div>
 <span style='font-size: 1.2rem; opacity: 0.9;'>🧬</span>
 </div>
 <!-- 核心信息区 -->
 <div style='position: relative; z-index: 1;'>
-<h2 style='margin: 0 0 2px 0; font-size: 2rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;'>ZJW</h2>
-<p style='margin: 0 0 12px 0; font-size: 0.85rem; font-weight: 600; color: #94a3b8; letter-spacing: 0.05em;'>JIA WEI ZHANG</p>
+<h2 style='margin: 0 0 2px 0; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #f8fafc, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.02em;'>ZJW</h2>
+<p style='margin: 0 0 12px 0; font-size: 0.85rem; font-weight: 600; color: #64748b; letter-spacing: 0.05em;'>JIA WEI ZHANG</p>
 <div style='display: flex; align-items: center; gap: 10px;'>
-<span style='font-size: 0.85rem; font-weight: 600; color: #475569;'>Flow Cytometry Inventory</span>
-<span style='padding: 2px 8px; background: #f1f5f9; color: #3b82f6; border-radius: 12px; font-size: 0.65rem; font-weight: 800; border: 1px solid #e2e8f0;'>V1.0</span>
+<span style='font-size: 0.85rem; font-weight: 600; color: #e2e8f0;'>Flow Cytometry Inventory</span>
+<span style='padding: 2px 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 12px; font-size: 0.65rem; font-weight: 800; border: 1px solid rgba(16, 185, 129, 0.2);'>V1.0</span>
 </div>
 </div>
-<!-- 底部高科技渐变线 -->
-<div style='position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #3b82f6, #10b981, #3b82f6);'></div>
+<!-- 顶部极光线 -->
+<div style='position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #10b981, transparent);'></div>
 </div>
 """, unsafe_allow_html=True)
 
