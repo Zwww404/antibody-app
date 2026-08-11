@@ -354,17 +354,15 @@ with col_left:
 
     st.markdown("<div style='margin: 18px 0;'></div>", unsafe_allow_html=True)
 
-    # ➕ 中部：添加新抗体表单 (克隆号下岗，体积上位)
+    # ==========================================
+    # ➕ 中部：添加新抗体表单
     # ==========================================
     st.markdown("### ➕ 添加新抗体")
     with st.form("add_antibody_form", clear_on_submit=True):
         new_target = st.text_input("靶点 (Target) *", placeholder="例: CD4")
         new_fluor = st.text_input("荧光素 (Fluorophore) *", placeholder="例: BV421")
         new_loc = st.selectbox("抗原位置 (Localization)", ["Surface (表面)", "Intracellular (胞内)", "Intranuclear (核内)"])
-        
-        # 👑 核心替换：原先的克隆号被替换成了初始体积
         new_volume = st.number_input("初始体积 (Volume µL)", value=None, placeholder="可留空不填", min_value=0.0, step=10.0)
-        
         new_box = st.text_input("物理位置 (Location)", placeholder="例: 4℃-Box1-A2")
         new_status = st.selectbox("状态 (Status)", ["In Use (使用中)", "Low (快用完)", "Empty (待采购)", "Expired (已过期)"])
         
@@ -376,25 +374,29 @@ with col_left:
                 st.error("操作失败：请务必填写【靶点】和【荧光素】！")
             else:
                 vol_to_save = new_volume if new_volume is not None else ""
-                # 严格按照列顺序排列：靶点, 荧光素, 位置, 体积, 物理位置, 状态, 克隆号(留空)
                 new_row = pd.DataFrame([[new_target, new_fluor, new_loc, vol_to_save, new_box, new_status, ""]], columns=EXPECTED_COLS)
                 updated_df = pd.concat([new_row, st.session_state.df], ignore_index=True)
                 save_data(updated_df)
+                
+                # 🚀 引擎核心 1：只要新增数据，就让计数器 +1，强迫右侧表格刷新
+                st.session_state.update_counter = st.session_state.get("update_counter", 0) + 1
                 st.rerun()
 
     st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
-    
-    
+
     # ==========================================
-    # 🧪 核心新功能：实验 Panel 批量扣减引擎 (真动态交互 + 纯净蓝按钮)
+    # 🧪 核心新功能：实验 Panel 批量扣减引擎 (强制刷新 + 常驻提示版)
     # ==========================================
     st.markdown("### 🧪 实验 Panel 批量扣减")
     
-    # 用普通容器代替 form，解放交互限制
+    # 🌟 强效持久的成功提示：不仅不会一闪而过，还会稳稳停留在页面上
+    if st.session_state.get("show_deduct_success", False):
+        st.success("✅ 批量扣减成功，右侧库存状态已实时更新！")
+        st.session_state.show_deduct_success = False # 显示完后关闭开关，等待下次触发
+    
     with st.container():
         st.caption("按住 `Ctrl` 键可多选，一次性扣除本次实验消耗的抗体。")
         
-        # 准备下拉选项
         df_opts = st.session_state.df.copy()
         valid_opts = df_opts[df_opts["Target"] != ""]
         options = []
@@ -402,7 +404,6 @@ with col_left:
             vol_str = f"剩 {row['Volume']} µL" if row['Volume'] != "" else "未记录体积"
             options.append(f"[{idx}] {row['Target']} - {row['Fluorophore']} ({vol_str})")
             
-        # 🔑 动态 Key 计数器：这是让下拉框在扣减成功后能安全清空且绝对不报错的秘诀
         if "deduct_key_counter" not in st.session_state:
             st.session_state.deduct_key_counter = 0
             
@@ -413,7 +414,6 @@ with col_left:
         )
         
         deduction_dict = {}
-        # 因为脱离了 form，只要这里一选，下面立刻就会动态弹出！
         if selected_abs:
             st.markdown("<p style='font-size: 0.9rem; font-weight: 600; color: #3b82f6; margin-top: 10px;'>👇 请设定单管消耗量 (µL)：</p>", unsafe_allow_html=True)
             for sel in selected_abs:
@@ -421,9 +421,7 @@ with col_left:
                 deduction_dict[sel] = st.number_input(f"💧 {name_display}", min_value=0.1, value=1.0, step=0.5, key=f"vol_{sel}_{st.session_state.deduct_key_counter}")
         
         st.write("")
-        
-        # 👑 type="primary" 会自动激活上面写的专属蓝色 CSS，让它看起来和表单提交按钮一模一样！
-        submitted_batch = st.button("**⚡ 确认扣减选定用量**", type="primary", use_container_width=True)
+        submitted_batch = st.button("确认扣减选定用量", type="primary", use_container_width=True)
         
         if submitted_batch:
             if not selected_abs:
@@ -433,10 +431,8 @@ with col_left:
                 for sel in selected_abs:
                     idx = int(sel.split("]")[0].replace("[", ""))
                     consumed_vol = deduction_dict[sel]
-                    
                     old_vol = updated_df.at[idx, 'Volume']
                     
-                    # 究极防崩溃装甲：拦截所有非数字
                     if pd.notna(old_vol) and old_vol is not None and str(old_vol).strip() != "":
                         try:
                             new_vol = max(0.0, float(old_vol) - float(consumed_vol))
@@ -451,14 +447,17 @@ with col_left:
                             
                 save_data(updated_df)
                 
-                # ✅ 扣减成功后，让 Key +1。系统会以为这是一个新的下拉框，瞬间清空残留！
+                # 让下拉框复位为空白
                 st.session_state.deduct_key_counter += 1
                 
-                st.toast("✅ 批量扣减成功，状态已更新！", icon="🧪")
+                # 🚀 引擎核心 2：只要扣减成功，就让计数器 +1，强迫右侧表格刷新！
+                st.session_state.update_counter = st.session_state.get("update_counter", 0) + 1
+                
+                # 开启持久成功提示开关
+                st.session_state.show_deduct_success = True
                 st.rerun()
 
     st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
-
     # 3. 下方：数据恢复模块
     st.markdown("### ⚠️ 数据恢复")
     st.markdown("<p style='font-size:0.85rem; color:#64748b; margin-bottom:8px;'>管理员导入本地 CSV 文件覆盖全库</p>", unsafe_allow_html=True)
@@ -517,6 +516,10 @@ with col_right:
         use_container_width=True,
         num_rows="fixed" if is_filtered else "dynamic",
         height=600,
+       
+        # 👇 极其关键的救命稻草：接收左侧发来的刷新信号！
+        key=f"data_editor_{st.session_state.get('update_counter', 0)}",
+        
         column_config={
             "Target": st.column_config.TextColumn("🎯 靶点 (Target)"),
             "Fluorophore": st.column_config.TextColumn("🌈 荧光素"),
