@@ -17,7 +17,7 @@ if "logged_in" not in st.session_state:
 
 # 如果没有登录，渲染登录界面并拦截后续所有代码执行
 if not st.session_state["logged_in"]:
-    st.markdown("<h2 style='text-align: center; margin-top: 100px;'>🔒 肿瘤免疫流式抗体库存系统</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; margin-top: 100px;'>🔒 流式抗体管理系统</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #666;'>请输入课题组专属访问密码</p>", unsafe_allow_html=True)
     
     # 将输入框居中
