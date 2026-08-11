@@ -221,6 +221,7 @@ def save_data(df):
 # ==========================================
 # ==========================================
 # ==========================================
+# ==========================================
 # 🚀 4. 全局界面渲染与左右分栏逻辑
 # ==========================================
 
@@ -238,11 +239,10 @@ st.markdown("""
     h2, h3 { font-weight: 600 !important; color: #1e293b !important; }
 
     /* ========================================================= */
-    /* 🚀 究极定位锁定：兼容新旧版 Streamlit，强行精准提拉左侧列！ */
+    /* 🚀 修复版定位锁定：精确制导左侧列，绝不误伤其他外层容器！ */
     /* ========================================================= */
-    div[data-testid="column"]:first-of-type,
-    div[data-testid="stColumn"]:first-of-type,
-    div:has(#left_column_anchor) {
+    div[data-testid="column"]:has(#left_column_anchor),
+    div[data-testid="stColumn"]:has(#left_column_anchor) {
         transform: translateY(-165px) !important;
         margin-bottom: -165px !important;
         z-index: 999;
