@@ -223,15 +223,28 @@ def save_data(df):
 # 🚀 4. 全局界面渲染与左右分栏逻辑
 # ==========================================
 
-# 👇 核心秘籍：将左侧控制 UI 的 CSS 提早到列分配之前注入，彻底消灭“幽灵占位”！
 st.markdown("""
     <style>
-    /* 将左侧整体向上提拉，与右侧表格顶部精准平齐 */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+    html, body, [class*="css"] { font-family: 'Inter', 'Noto Sans SC', sans-serif !important; color: #1e293b; }
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    [data-testid="stForm"] { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025); }
+    [data-testid="stFormSubmitButton"] > button { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 8px; font-weight: 600; padding: 0.5rem 1rem; transition: all 0.3s ease; }
+    [data-testid="stFormSubmitButton"] > button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4); }
+    h1 { font-weight: 700 !important; color: #0f172a !important; }
+    h2, h3 { font-weight: 600 !important; color: #1e293b !important; }
+
+    /* ========================================================= */
+    /* 🚀 核心空间位移魔法：强行把整个左侧列向上提拉 11.5rem！ */
+    /* ========================================================= */
     [data-testid="column"]:first-child {
-        margin-top: -3.5rem !important;
+        margin-top: -11.5rem !important; 
+        z-index: 999; /* 保证按钮浮在最上层，绝对可点击 */
     }
 
-    /* 统一标准按钮与下载按钮的尺寸、圆角与阴影 */
+    /* 💎 双按钮高级科技 UI */
     div[data-testid="stButton"] > button, 
     div[data-testid="stDownloadButton"] > button {
         width: 100% !important;
@@ -242,7 +255,6 @@ st.markdown("""
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         box-shadow: 0 4px 6px -1px rgba(78, 204, 163, 0.1) !important;
     }
-    
     div[data-testid="stButton"] > button p, 
     div[data-testid="stDownloadButton"] > button p {
         font-size: 1.05rem !important;
@@ -251,8 +263,6 @@ st.markdown("""
         transition: all 0.3s ease !important;
         letter-spacing: 0.5px !important;
     }
-    
-    /* 【获取云端数据】悬浮青绿光晕 */
     div[data-testid="stButton"] > button:hover {
         background: linear-gradient(135deg, #4ecca3 0%, #45b894 100%) !important;
         border-color: #45b894 !important;
@@ -262,8 +272,6 @@ st.markdown("""
     div[data-testid="stButton"] > button:hover p {
         color: #ffffff !important;
     }
-    
-    /* 【下载表格数据】悬浮 #0094D9 科技蓝填充 */
     div[data-testid="stDownloadButton"] > button:hover {
         background: linear-gradient(135deg, #0094D9 0%, #007bb5 100%) !important;
         border-color: #007bb5 !important;
@@ -273,7 +281,6 @@ st.markdown("""
     div[data-testid="stDownloadButton"] > button:hover p {
         color: #ffffff !important;
     }
-    
     div[data-testid="stButton"] > button:active,
     div[data-testid="stDownloadButton"] > button:active {
         transform: translateY(1px) !important;
