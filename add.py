@@ -283,7 +283,7 @@ with col_left:
         mime='text/csv',
         use_container_width=True
     )
-    st.markdown("<p style='font-size:0.9rem; color:#64748b; margin-top:20px; margin-bottom:5px;'>⚠️ 数据恢复 (仅限管理员上传覆盖)</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:0.9rem; color:#64748b; margin-top:20px; margin-bottom:5px;'>⚠️ 数据恢复 (管理员上传覆盖)</p>", unsafe_allow_html=True)
     # st.markdown("<p style='font-size:0.9rem; color:#64748b; margin-top:15px; margin-bottom:5px;'>⚠️ 数据恢复 (仅限管理员上传覆盖)</p>", unsafe_allow_html=True)
     uploaded_file = st.file_uploader("导入本地 CSV 文件恢复库存", type=["csv"], label_visibility="collapsed")
     
