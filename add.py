@@ -496,7 +496,7 @@ with col_left:
 <h2 style='margin: 0 0 2px 0; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #f8fafc, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.02em;'>ZJW</h2>
 <p style='margin: 0 0 12px 0; font-size: 0.85rem; font-weight: 600; color: #64748b; letter-spacing: 0.05em;'>JIA WEI ZHANG</p>
 <div style='display: flex; align-items: center; gap: 10px;'>
-<span style='font-size: 0.85rem; font-weight: 600; color: #e2e8f0;'>Flow Cytometry Inventory</span>
+<span style='font-size: 0.85rem; font-weight: 700; color: #e2e8f0;'>Flow Cytometry Antibodies Inventory</span>
 <span style='padding: 2px 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 12px; font-size: 0.65rem; font-weight: 800; border: 1px solid rgba(16, 185, 129, 0.2);'>V1.0</span>
 </div>
 </div>
