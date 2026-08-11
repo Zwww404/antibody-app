@@ -145,6 +145,7 @@ st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 流式抗
 
 DATA_FILE = "antibodies.csv"
 # ==========================================
+# ==========================================
 # 📊 重新定义列顺序：克隆号垫底，体积加入
 # ==========================================
 EXPECTED_COLS = ["Target", "Fluorophore", "Localization", "Volume", "Box_Location", "Status", "Clone"]
@@ -177,10 +178,13 @@ def load_data():
     
     # 尝试将 Volume 转为数字。如果是空白或无效字符，会变成 NaN
     df["Volume"] = pd.to_numeric(df["Volume"], errors='coerce')
-    # 🚀 极其关键：用 fillna("") 彻底抹除所有 NaN，前端就会显示纯粹的空白！
-    df.fillna("", inplace=True)
+    
+    # 🚀 极其关键的修复：
+    # 先将整个表格转为包容所有类型的 object，然后再用空白字符串填充 NaN，
+    # 这样就能完美避开 Pandas 严苛的数据类型检查！
+    df = df.astype(object).fillna("")
+    
     return df
-
 if 'df' not in st.session_state:
     st.session_state.df = load_data()
 
