@@ -244,8 +244,19 @@ with col_left:
                 updated_df = pd.concat([new_row, st.session_state.df], ignore_index=True)
                 save_data(updated_df)
                 st.rerun()
+st.write("")
+# ==========================================
+# 🔄 新增：数据实时同步模块
+# ==========================================
+st.markdown("### 🔄 团队数据同步")
+if st.button("获取云端最新库存", use_container_width=True):
+    st.session_state.df = load_data()
+    st.toast("✅ 已成功同步团队最新数据！", icon="🔄")
+    st.rerun()
+
+st.write("")
 # 🚨 新增：灾备模块 (下载与覆盖恢复)
-    # 💎 为下载按钮单独注入的高级 CSS 样式
+# 💎 为下载按钮单独注入的高级 CSS 样式
     st.markdown("""
         <style>
         /* 针对下载按钮的专属美化 */
