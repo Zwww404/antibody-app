@@ -334,7 +334,7 @@ col_left, col_right = st.columns([1, 2.5], gap="large")
 with col_left:
     # 1. 顶部：表格数据同步与下载模块
     st.markdown("### 🔄 表格数据同步与下载")
-    if st.button("获取最新数据", use_container_width=True):
+    if st.button("同步最新数据", use_container_width=True):
         st.session_state.df = load_data()
         # 👑 强刷信号：强迫右侧表格更新
         st.session_state.table_key = st.session_state.get("table_key", 0) + 1
