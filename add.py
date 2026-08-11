@@ -305,6 +305,26 @@ st.markdown("""
     div[data-testid="stDownloadButton"] > button:active {
         transform: translateY(1px) !important;
     }
+    
+    /* 🚀 专属定制：让脱离表单的 Primary 按钮保持纯正的科技蓝！ */
+    /* ========================================================= */
+    div[data-testid="stButton"] > button[kind="primary"] {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.5rem 1rem !important;
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2) !important;
+    }
+    div[data-testid="stButton"] > button[kind="primary"] p {
+        color: white !important;
+        font-weight: 600 !important;
+        font-size: 1.05rem !important;
+    }
+    div[data-testid="stButton"] > button[kind="primary"]:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4) !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -364,14 +384,17 @@ with col_left:
 
     st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
     
+    
     # ==========================================
-    # 🧪 核心新功能：实验 Panel 批量扣减引擎 (回归纯净稳定版)
+    # 🧪 核心新功能：实验 Panel 批量扣减引擎 (真动态交互 + 纯净蓝按钮)
     # ==========================================
     st.markdown("### 🧪 实验 Panel 批量扣减")
-    with st.form("batch_deduct_form", clear_on_submit=True):
+    
+    # 用普通容器代替 form，解放交互限制
+    with st.container():
         st.caption("按住 `Ctrl` 键可多选，一次性扣除本次实验消耗的抗体。")
         
-        # 准备下拉选项（智能识别是否为空白体积）
+        # 准备下拉选项
         df_opts = st.session_state.df.copy()
         valid_opts = df_opts[df_opts["Target"] != ""]
         options = []
@@ -379,18 +402,28 @@ with col_left:
             vol_str = f"剩 {row['Volume']} µL" if row['Volume'] != "" else "未记录体积"
             options.append(f"[{idx}] {row['Target']} - {row['Fluorophore']} ({vol_str})")
             
-        selected_abs = st.multiselect("🔍 选择本次实验使用的抗体", options)
+        # 🔑 动态 Key 计数器：这是让下拉框在扣减成功后能安全清空且绝对不报错的秘诀
+        if "deduct_key_counter" not in st.session_state:
+            st.session_state.deduct_key_counter = 0
+            
+        selected_abs = st.multiselect(
+            "🔍 选择本次实验使用的抗体", 
+            options,
+            key=f"deduct_selections_{st.session_state.deduct_key_counter}"
+        )
         
         deduction_dict = {}
+        # 因为脱离了 form，只要这里一选，下面立刻就会动态弹出！
         if selected_abs:
             st.markdown("<p style='font-size: 0.9rem; font-weight: 600; color: #3b82f6; margin-top: 10px;'>👇 请设定单管消耗量 (µL)：</p>", unsafe_allow_html=True)
             for sel in selected_abs:
                 name_display = sel.split("] ")[1].split(" (")[0]
-                deduction_dict[sel] = st.number_input(f"💧 {name_display}", min_value=0.1, value=1.0, step=0.5, key=sel)
+                deduction_dict[sel] = st.number_input(f"💧 {name_display}", min_value=0.1, value=1.0, step=0.5, key=f"vol_{sel}_{st.session_state.deduct_key_counter}")
         
         st.write("")
-        # 👑 核心回归：使用原生表单按钮（自动恢复蓝色），并加入 ** 加粗语法！
-        submitted_batch = st.form_submit_button("**⚡ 确认扣减选定用量**", use_container_width=True)
+        
+        # 👑 type="primary" 会自动激活上面写的专属蓝色 CSS，让它看起来和表单提交按钮一模一样！
+        submitted_batch = st.button("**⚡ 确认扣减选定用量**", type="primary", use_container_width=True)
         
         if submitted_batch:
             if not selected_abs:
@@ -403,13 +436,12 @@ with col_left:
                     
                     old_vol = updated_df.at[idx, 'Volume']
                     
-                    # 👑 究极防崩溃装甲：全面拦截 None、NaN、纯空格
+                    # 究极防崩溃装甲：拦截所有非数字
                     if pd.notna(old_vol) and old_vol is not None and str(old_vol).strip() != "":
                         try:
                             new_vol = max(0.0, float(old_vol) - float(consumed_vol))
                             updated_df.at[idx, 'Volume'] = new_vol
                             
-                            # 智能状态联动
                             if new_vol == 0.0:
                                 updated_df.at[idx, 'Status'] = "Empty (待采购)"
                             elif new_vol <= 10.0 and updated_df.at[idx, 'Status'] == "In Use (使用中)":
@@ -418,7 +450,11 @@ with col_left:
                             pass
                             
                 save_data(updated_df)
-                st.success("✅ 操作成功！(注: 未记录初始体积的抗体已被自动跳过扣减)")
+                
+                # ✅ 扣减成功后，让 Key +1。系统会以为这是一个新的下拉框，瞬间清空残留！
+                st.session_state.deduct_key_counter += 1
+                
+                st.toast("✅ 批量扣减成功，状态已更新！", icon="🧪")
                 st.rerun()
 
     st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
