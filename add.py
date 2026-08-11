@@ -277,7 +277,7 @@ with col_left:
     st.markdown("### 📥 数据备份与恢复")
     csv = st.session_state.df.to_csv(index=False).encode('utf-8-sig')
     st.download_button(
-        label="⬇️ 下载最新 CSV 备份",
+        label="下载最新 CSV 备份",
         data=csv,
         file_name='抗体库存备份.csv',
         mime='text/csv',
