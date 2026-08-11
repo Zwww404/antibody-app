@@ -16,7 +16,7 @@ if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 
 if not st.session_state["logged_in"]:
-  st.markdown("""
+st.markdown("""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
@@ -24,41 +24,34 @@ if not st.session_state["logged_in"]:
         footer {visibility: hidden;}
         header {visibility: hidden;}
         
-        /* 🌟 【关键修复】：强制整个网页大背景变为柔和的亮色，无视电脑的深色模式 */
-        [data-testid="stAppViewContainer"] {
-            background-color: #f0f4f8 !important; 
-        }
-        
         .stApp { font-family: 'Inter', sans-serif; }
         .block-container { padding-top: 22vh !important; }
 
-        /* 强制标题颜色为深黑，副标题为深灰 */
         .login-title {
             text-align: center;
             font-weight: 700;
             font-size: 2.2rem;
             margin-bottom: 0.5rem;
             letter-spacing: 1px;
-            color: #0f172a !important; 
         }
         .login-subtitle {
             text-align: center;
+            color: #888888;
             font-size: 1rem;
             margin-bottom: 2rem;
             font-weight: 400;
-            color: #64748b !important; 
         }
 
-        /* 表单框纯白色，并加入适配浅色背景的柔和阴影 */
+        /* 强制将表单框变为纯白色，并加入柔和阴影 */
         [data-testid="stForm"] {
             background-color: #ffffff !important; 
             border: 1px solid #e2e8f0 !important;
             border-radius: 20px;
             padding: 40px 30px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
         }
         
-        /* 强制表单内的字体颜色为深色 */
+        /* 强制表单内的字体颜色为深灰，防止在深色模式下变白字看不见 */
         [data-testid="stForm"] label {
             color: #1e293b !important;
             font-weight: 600 !important;
@@ -84,7 +77,7 @@ if not st.session_state["logged_in"]:
         </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("<div class='login-title'>🔬 免疫流式抗体管理系统</div>", unsafe_allow_html=True)
+    st.markdown("<div class='login-title'>🔬 流式抗体管理系统</div>", unsafe_allow_html=True)
     st.markdown("<div class='login-subtitle'>安全验证 · 请输入课题组专属密钥</div>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 1.2, 1])
