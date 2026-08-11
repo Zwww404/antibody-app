@@ -1,14 +1,5 @@
-import streamlit as st
-import pandas as pd
-import os
-import io
-from github import Github
-from datetime import datetime, timedelta
-
-st.set_page_config(page_title="流式抗体管理系统", page_icon="🔬", layout="wide")
-
 # ==========================================
-# 🔐 1. 旗舰级高级密码验证 UI (全局纯白修复版)
+# 🔐 1. 旗舰级高级密码验证 UI (青绿定制版)
 # ==========================================
 LAB_PASSWORD = "wangxuefeng"
 
@@ -16,16 +7,15 @@ if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 
 if not st.session_state["logged_in"]:
-    # 注意这里：if 语句下面的所有内容都正确保留了缩进
     st.markdown("""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
         
-        /* 🌟 强制整个网页大背景变为柔和的亮色，无视电脑的深色模式 */
+        /* 强制整个网页大背景变为柔和的亮色 */
         [data-testid="stAppViewContainer"] {
             background-color: #f0f4f8 !important; 
         }
@@ -33,7 +23,6 @@ if not st.session_state["logged_in"]:
         .stApp { font-family: 'Inter', sans-serif; }
         .block-container { padding-top: 22vh !important; }
 
-        /* 强制标题颜色为深黑，副标题为深灰 */
         .login-title {
             text-align: center;
             font-weight: 700;
@@ -50,7 +39,7 @@ if not st.session_state["logged_in"]:
             color: #64748b !important; 
         }
 
-        /* 表单框纯白色，并加入适配浅色背景的柔和阴影 */
+        /* 表单框样式 */
         [data-testid="stForm"] {
             background-color: #ffffff !important; 
             border: 1px solid #e2e8f0 !important;
@@ -59,40 +48,64 @@ if not st.session_state["logged_in"]:
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
         
-        /* 强制表单内的字体颜色为深色 */
+        /* 💥 修复 1：彻底隐藏输入框点击后自带的提示小字 (Press Enter to submit) */
+        [data-testid="InputInstructions"] {
+            display: none !important;
+        }
+
+        /* 💥 修复 2：访问密码 字体加粗并放大 */
         [data-testid="stForm"] label {
             color: #1e293b !important;
-            font-weight: 600 !important;
-            font-size: 1.05rem !important;
+            font-weight: 800 !important; /* 加粗 */
+            font-size: 1.25rem !important; /* 放大 */
+            margin-bottom: 0.5rem !important;
         }
         
-        /* 密码输入框的纯白清爽样式 */
+        /* 密码输入框清爽样式，同步修改聚焦时的边框颜色为 #4ecca3 */
         [data-testid="stTextInput"] input {
             border-radius: 10px;
-            padding: 12px 16px;
+            padding: 14px 16px;
             background-color: #f8fafc !important;
             border: 1px solid #cbd5e1 !important;
             color: #0f172a !important;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
         [data-testid="stTextInput"] input:focus {
-            border-color: #ff4b4b !important; 
-            box-shadow: 0 0 0 2px rgba(255, 75, 75, 0.2) !important;
+            border-color: #4ecca3 !important; 
+            box-shadow: 0 0 0 2px rgba(78, 204, 163, 0.25) !important;
         }
         
-        /* 按钮上方留白 */
-        [data-testid="stForm"] .stButton { margin-top: 20px; }
+        /* 💥 修复 3：定制解锁按钮颜色、字体加粗放大 */
+        [data-testid="stForm"] .stButton { margin-top: 25px; }
+        [data-testid="stFormSubmitButton"] button {
+            background-color: #4ecca3 !important; /* 更改为青绿色 */
+            border: none !important;
+            border-radius: 10px !important;
+            transition: all 0.3s ease !important;
+        }
+        [data-testid="stFormSubmitButton"] button p {
+            font-size: 1.25rem !important; /* 放大字体 */
+            font-weight: 700 !important;   /* 加粗字体 */
+            color: #ffffff !important;
+        }
+        [data-testid="stFormSubmitButton"] button:hover {
+            background-color: #45b894 !important; /* 悬浮时颜色微调加深 */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -5px rgba(78, 204, 163, 0.4) !important;
+        }
         </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("<div class='login-title'>🔬 流式抗体管理系统</div>", unsafe_allow_html=True)
-    st.markdown("<div class='login-subtitle'>安全验证 · 请输入课题组专属密钥</div>", unsafe_allow_html=True)
+    st.markdown("<div class='login-title'>🔬 抗体管理系统</div>", unsafe_allow_html=True)
+    st.markdown("<div class='login-subtitle'>安全验证 · 请输入课题组密码</div>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         with st.form("login_form"):
             user_input = st.text_input("访问密码", type="password", placeholder="Press Enter to unlock")
-            submit_button = st.form_submit_button("解锁系统", type="primary", use_container_width=True)
+            
+            # 按钮抛弃原生 primary 属性，全靠 CSS 定制颜色
+            submit_button = st.form_submit_button("登录系统", use_container_width=True)
             
             if submit_button:
                 if user_input == LAB_PASSWORD:
