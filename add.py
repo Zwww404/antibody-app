@@ -62,11 +62,11 @@ if not st.session_state["logged_in"]:
         }
 
         /* 💥 修复 2：访问密码 字体加粗并放大 */
-        [data-testid="stForm"] label {
+        [data-testid="stForm"] label, [data-testid="stForm"] label p {
             color: #1e293b !important;
-            font-weight: 800 !important; /* 加粗 */
-            font-size: 1.25rem !important; /* 放大 */
-            margin-bottom: 0.5rem !important;
+            font-weight: 800 !important; 
+            font-size: 1.5rem !important; /* 强制拉大字号 */
+            margin-bottom: 0.4rem !important;
         }
         
         /* 密码输入框清爽样式，同步修改聚焦时的边框颜色为 #4ecca3 */
