@@ -2,4 +2,4 @@ Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
 CD4,BV421,Surface (表面),299.0,,In Use (使用中),
 CD8,PE,Surface (表面),10,,,
 CD4,,,300,,,
-CD103,,,,,,
+CD103,PE,,,,,
