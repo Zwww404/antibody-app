@@ -235,8 +235,10 @@ with col_left:
     # 💎 专属定制：同步按钮高级 UI (强力穿透版)
     st.markdown("""
         <style>
-        /* 直接锁定 standard button 的父级容器，精准打击真正的按钮 */
-        div[data-testid="stButton"] > button {
+        /* 1. 精准锁定普通按钮（获取云端数据）与下载按钮的公共外观，确保尺寸、圆角、高度 100% 一致 */
+        div[data-testid="stButton"] > button, 
+        div[data-testid="stDownloadButton"] > button {
+            width: 100% !important;
             background: linear-gradient(135deg, #ffffff 0%, #f0fdf9 100%) !important;
             border: 1px solid #4ecca3 !important;
             border-radius: 12px !important;
@@ -244,14 +246,18 @@ with col_left:
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
             box-shadow: 0 4px 6px -1px rgba(78, 204, 163, 0.1) !important;
         }
-        div[data-testid="stButton"] > button p {
+        
+        /* 统一文字样式 */
+        div[data-testid="stButton"] > button p, 
+        div[data-testid="stDownloadButton"] > button p {
             font-size: 1.05rem !important;
             font-weight: 700 !important;
             color: #1e293b !important;
             transition: all 0.3s ease !important;
             letter-spacing: 0.5px !important;
         }
-        /* 鼠标悬浮时的青绿光晕效果 */
+        
+        /* 2. 【获取云端数据】按钮悬浮：保持原有的青绿色光晕 */
         div[data-testid="stButton"] > button:hover {
             background: linear-gradient(135deg, #4ecca3 0%, #45b894 100%) !important;
             border-color: #45b894 !important;
@@ -261,18 +267,44 @@ with col_left:
         div[data-testid="stButton"] > button:hover p {
             color: #ffffff !important;
         }
-        div[data-testid="stButton"] > button:active {
+        
+        /* 3. 【下载最新 CSV 备份】按钮悬浮：完美切换为你指定的 #0094D9 填充色 */
+        div[data-testid="stDownloadButton"] > button:hover {
+            background: linear-gradient(135deg, #0094D9 0%, #007bb5 100%) !important;
+            border-color: #007bb5 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 148, 217, 0.3) !important;
+        }
+        div[data-testid="stDownloadButton"] > button:hover p {
+            color: #ffffff !important;
+        }
+        
+        /* 点击时的微小下沉动效 */
+        div[data-testid="stButton"] > button:active,
+        div[data-testid="stDownloadButton"] > button:active {
             transform: translateY(1px) !important;
         }
         </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("### 🔄 表格数据同步")
+    # 1. 顶部：表格数据同步与下载模块
+    st.markdown("### 🔄 表格数据同步与下载")
     if st.button("获取云端数据", use_container_width=True):
         st.session_state.df = load_data()
         st.toast("✅ 已成功同步表格最新数据！", icon="🔄")
         st.rerun()
-    # 💥 核心修复：这里千万不要写 st.write("") 了，直接紧贴着进入下一个灾备模块，间距就会变得非常紧凑美观。
+
+    # 紧接着放下载备份文件按钮（现在它的尺寸和获取云端数据完全一致了）
+    csv = st.session_state.df.to_csv(index=False).encode('utf-8-sig')
+    st.download_button(
+        label="⬇️ 下载最新 CSV 备份",
+        data=csv,
+        file_name='抗体库存备份.csv',
+        mime='text/csv',
+        use_container_width=True
+    )
+
+    st.markdown("<div style='margin: 18px 0;'></div>", unsafe_allow_html=True)
     
     st.markdown("### ➕ 添加新抗体")
     with st.form("add_antibody_form", clear_on_submit=True):
