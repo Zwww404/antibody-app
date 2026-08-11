@@ -289,7 +289,7 @@ with col_left:
 
     # 1. 顶部：表格数据同步与下载模块
     st.markdown("### 🔄 表格数据同步与下载")
-    if st.button("获取云端数据", use_container_width=True):
+    if st.button("同步表格数据", use_container_width=True):
         st.session_state.df = load_data()
         st.toast("✅ 已成功同步表格最新数据！", icon="🔄")
         st.rerun()
@@ -297,7 +297,7 @@ with col_left:
     # 紧接着放下载备份文件按钮（现在它的尺寸和获取云端数据完全一致了）
     csv = st.session_state.df.to_csv(index=False).encode('utf-8-sig')
     st.download_button(
-        label="⬇️ 下载最新 CSV 备份",
+        label="下载表格数据",
         data=csv,
         file_name='抗体库存备份.csv',
         mime='text/csv',
