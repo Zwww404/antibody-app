@@ -144,7 +144,10 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 流式抗体管理系统</h1>", unsafe_allow_html=True)
 
 DATA_FILE = "antibodies.csv"
-EXPECTED_COLS = ["Target", "Fluorophore", "Localization", "Clone", "Box_Location", "Status"]
+# ==========================================
+# 📊 重新定义列顺序：克隆号垫底，体积加入
+# ==========================================
+EXPECTED_COLS = ["Target", "Fluorophore", "Localization", "Volume", "Box_Location", "Status", "Clone"]
 
 def load_data():
     if not os.path.exists(DATA_FILE):
@@ -153,20 +156,29 @@ def load_data():
         return df
     
     df = pd.read_csv(DATA_FILE)
+    # 兼容中英文旧表头
     rename_map = {
         "靶点 (Target)": "Target", "靶点(Target)": "Target",
         "荧光素": "Fluorophore", "荧光素 (Fluorophore)": "Fluorophore",
         "抗原位置": "Localization", "克隆号": "Clone",
         "存放位置": "Box_Location", "物理位置 (Location)": "Box_Location",
-        "状态": "Status"
+        "状态": "Status", "体积": "Volume", "余量": "Volume"
     }
     df = df.rename(columns=rename_map)
     df = df.loc[:, ~df.columns.duplicated()]
     
+    # 🌟 智能补全缺失列（全部默认给空白 ""，不再强塞 100）
     for col in EXPECTED_COLS:
         if col not in df.columns:
             df[col] = ""
-    df = df[EXPECTED_COLS].fillna("")
+                
+    # 强制重新排列列顺序
+    df = df[EXPECTED_COLS]
+    
+    # 尝试将 Volume 转为数字。如果是空白或无效字符，会变成 NaN
+    df["Volume"] = pd.to_numeric(df["Volume"], errors='coerce')
+    # 🚀 极其关键：用 fillna("") 彻底抹除所有 NaN，前端就会显示纯粹的空白！
+    df.fillna("", inplace=True)
     return df
 
 if 'df' not in st.session_state:
