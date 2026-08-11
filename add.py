@@ -332,17 +332,15 @@ st.markdown("""
 col_left, col_right = st.columns([1, 2.5], gap="large")
 
 with col_left:
-    # 🔑 极其关键的一行：这就是我们埋在左侧的“隐形定位锚点”，供 CSS 追踪使用！
-    st.markdown("<div id='left_column_anchor'></div>", unsafe_allow_html=True)
-
     # 1. 顶部：表格数据同步与下载模块
     st.markdown("### 🔄 表格数据同步与下载")
     if st.button("获取云端数据", use_container_width=True):
         st.session_state.df = load_data()
+        # 👑 强刷信号：强迫右侧表格更新
+        st.session_state.table_key = st.session_state.get("table_key", 0) + 1
         st.toast("✅ 已成功同步表格最新数据！", icon="🔄")
         st.rerun()
 
-    # 紧接着放下载备份文件按钮
     csv = st.session_state.df.to_csv(index=False).encode('utf-8-sig')
     st.download_button(
         label="下载表格数据",
@@ -354,9 +352,7 @@ with col_left:
 
     st.markdown("<div style='margin: 18px 0;'></div>", unsafe_allow_html=True)
 
-    # ==========================================
-    # ➕ 中部：添加新抗体表单
-    # ==========================================
+    # 2. 中部：添加新抗体表单
     st.markdown("### ➕ 添加新抗体")
     with st.form("add_antibody_form", clear_on_submit=True):
         new_target = st.text_input("靶点 (Target) *", placeholder="例: CD4")
@@ -377,22 +373,18 @@ with col_left:
                 new_row = pd.DataFrame([[new_target, new_fluor, new_loc, vol_to_save, new_box, new_status, ""]], columns=EXPECTED_COLS)
                 updated_df = pd.concat([new_row, st.session_state.df], ignore_index=True)
                 save_data(updated_df)
-                
-                # 🚀 引擎核心 1：只要新增数据，就让计数器 +1，强迫右侧表格刷新
-                st.session_state.update_counter = st.session_state.get("update_counter", 0) + 1
+                st.session_state.table_key = st.session_state.get("table_key", 0) + 1
                 st.rerun()
 
     st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
 
-    # ==========================================
-    # 🧪 核心新功能：实验 Panel 批量扣减引擎 (强制刷新 + 常驻提示版)
-    # ==========================================
+    # 3. 下方：实验 Panel 批量扣减引擎
     st.markdown("### 🧪 实验 Panel 批量扣减")
     
-    # 🌟 强效持久的成功提示：不仅不会一闪而过，还会稳稳停留在页面上
+    # 🌟 常驻成功提示：再也不会一闪而过了
     if st.session_state.get("show_deduct_success", False):
         st.success("✅ 批量扣减成功，右侧库存状态已实时更新！")
-        st.session_state.show_deduct_success = False # 显示完后关闭开关，等待下次触发
+        st.session_state.show_deduct_success = False
     
     with st.container():
         st.caption("按住 `Ctrl` 键可多选，一次性扣除本次实验消耗的抗体。")
@@ -446,19 +438,15 @@ with col_left:
                             pass
                             
                 save_data(updated_df)
-                
-                # 让下拉框复位为空白
                 st.session_state.deduct_key_counter += 1
-                
-                # 🚀 引擎核心 2：只要扣减成功，就让计数器 +1，强迫右侧表格刷新！
-                st.session_state.update_counter = st.session_state.get("update_counter", 0) + 1
-                
-                # 开启持久成功提示开关
+                # 👑 强刷信号：扣减完成后强制右侧刷新！
+                st.session_state.table_key = st.session_state.get("table_key", 0) + 1
                 st.session_state.show_deduct_success = True
                 st.rerun()
 
     st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
-    # 3. 下方：数据恢复模块
+
+    # 4. 下方：数据恢复模块
     st.markdown("### ⚠️ 数据恢复")
     st.markdown("<p style='font-size:0.85rem; color:#64748b; margin-bottom:8px;'>管理员导入本地 CSV 文件覆盖全库</p>", unsafe_allow_html=True)
     uploaded_file = st.file_uploader("导入备份文件恢复库存", type=["csv"], label_visibility="collapsed")
@@ -472,6 +460,7 @@ with col_left:
                         uploaded_df[col] = ""
                 uploaded_df = uploaded_df[EXPECTED_COLS].fillna("")
                 save_data(uploaded_df)
+                st.session_state.table_key = st.session_state.get("table_key", 0) + 1
                 st.success("✅ 数据已成功恢复并同步至云端！")
                 st.rerun()
             except Exception as e:
@@ -479,9 +468,7 @@ with col_left:
 
     st.markdown("<div style='margin: 25px 0;'></div>", unsafe_allow_html=True)
 
-    # ==========================================
-    # 💎 最底部：ZJW 专属系统架构师铭牌
-    # ==========================================
+    # 专属系统架构师铭牌
     st.markdown("""
         <div style='background: linear-gradient(135deg, #f0fdf9 0%, #e6fcf5 100%); border: 1.5px solid #4ecca3; border-radius: 16px; padding: 16px 20px; box-shadow: 0 4px 12px rgba(78, 204, 163, 0.12); position: relative; overflow: hidden;'>
             <p style='font-size: 0.7rem; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 2px 0;'>System Architect</p>
@@ -511,37 +498,36 @@ with col_right:
 
     st.caption("✨ 提示：双击表格内容即可直接修改。选中行最左侧方框并按 `Delete` 键即可删除。")
 
+    # ... 保留原本在 col_right 上方的过滤逻辑产生 filtered_df ...
+
     edited_df = st.data_editor(
         filtered_df,
         use_container_width=True,
         num_rows="fixed" if is_filtered else "dynamic",
         height=600,
-       
-        # 👇 极其关键的救命稻草：接收左侧发来的刷新信号！
-        key=f"data_editor_{st.session_state.get('update_counter', 0)}",
-        
+        # 👑 接收强刷信号：只要左侧操作，这里的 Key 就会改变，彻底抛弃旧缓存！
+        key=f"data_editor_{st.session_state.get('table_key', 0)}", 
         column_config={
             "Target": st.column_config.TextColumn("🎯 靶点 (Target)"),
             "Fluorophore": st.column_config.TextColumn("🌈 荧光素"),
             "Localization": st.column_config.SelectboxColumn("📍 位置", options=["Surface (表面)", "Intracellular (胞内)", "Intranuclear (核内)"]),
-            
-            # 👇 新增：带有水滴 Emoji 的体积列配置，限制最小值为 0，保留一位小数
             "Volume": st.column_config.NumberColumn("💧 体积 (Volume)", min_value=0.0, format="%.1f"),
-            
             "Box_Location": st.column_config.TextColumn("📦 存放位置"),
             "Status": st.column_config.SelectboxColumn("🚥 状态", options=["In Use (使用中)", "Low (快用完)", "Empty (待采购)", "Expired (已过期)"]),
-            
-            # 👇 调整：把克隆号挪到最后一行，完成垫底
             "Clone": st.column_config.TextColumn("🏷️ 克隆号")
         },
         hide_index=True
     )
 
-    if not edited_df.equals(filtered_df):
+    # 👑 究极防覆盖判定：全部转成字符串再对比，彻底无视 None/NaN/空白 转换导致的判定混乱！
+    if not edited_df.fillna("").astype(str).equals(filtered_df.fillna("").astype(str)):
         if is_filtered:
-            df.update(edited_df)
-            save_data(df)
+            # 修改时，需调取最新基底数据 df 进行 update
+            current_df = st.session_state.df.copy()
+            current_df.update(edited_df)
+            save_data(current_df)
         else:
             save_data(edited_df)
+        # 表格内部修改也发送信号
+        st.session_state.table_key = st.session_state.get("table_key", 0) + 1
         st.rerun()
-
