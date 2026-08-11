@@ -219,82 +219,80 @@ def save_data(df):
         st.error(f"⚠️ 云端同步失败！错误信息: {e}")
 
 # ==========================================
-# 后续界面渲染逻辑 (保持不变)
 # ==========================================
+# 🚀 4. 全局界面渲染与左右分栏逻辑
+# ==========================================
+
+# 👇 核心秘籍：将左侧控制 UI 的 CSS 提早到列分配之前注入，彻底消灭“幽灵占位”！
+st.markdown("""
+    <style>
+    /* 将左侧整体向上提拉，与右侧表格顶部精准平齐 */
+    [data-testid="column"]:first-child {
+        margin-top: -3.5rem !important;
+    }
+
+    /* 统一标准按钮与下载按钮的尺寸、圆角与阴影 */
+    div[data-testid="stButton"] > button, 
+    div[data-testid="stDownloadButton"] > button {
+        width: 100% !important;
+        background: linear-gradient(135deg, #ffffff 0%, #f0fdf9 100%) !important;
+        border: 1px solid #4ecca3 !important;
+        border-radius: 12px !important;
+        padding: 10px 0 !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 4px 6px -1px rgba(78, 204, 163, 0.1) !important;
+    }
+    
+    div[data-testid="stButton"] > button p, 
+    div[data-testid="stDownloadButton"] > button p {
+        font-size: 1.05rem !important;
+        font-weight: 700 !important;
+        color: #1e293b !important;
+        transition: all 0.3s ease !important;
+        letter-spacing: 0.5px !important;
+    }
+    
+    /* 【获取云端数据】悬浮青绿光晕 */
+    div[data-testid="stButton"] > button:hover {
+        background: linear-gradient(135deg, #4ecca3 0%, #45b894 100%) !important;
+        border-color: #45b894 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 10px 15px -3px rgba(78, 204, 163, 0.3) !important;
+    }
+    div[data-testid="stButton"] > button:hover p {
+        color: #ffffff !important;
+    }
+    
+    /* 【下载表格数据】悬浮 #0094D9 科技蓝填充 */
+    div[data-testid="stDownloadButton"] > button:hover {
+        background: linear-gradient(135deg, #0094D9 0%, #007bb5 100%) !important;
+        border-color: #007bb5 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 148, 217, 0.3) !important;
+    }
+    div[data-testid="stDownloadButton"] > button:hover p {
+        color: #ffffff !important;
+    }
+    
+    div[data-testid="stButton"] > button:active,
+    div[data-testid="stDownloadButton"] > button:active {
+        transform: translateY(1px) !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# 定义左右分栏
 col_left, col_right = st.columns([1, 2.5], gap="large")
 
 with col_left:
-    
-    # ==========================================
-    # 🔄 新增：数据实时同步模块
-    # 💎 专属定制：同步按钮高级 UI 
-    # 💎 专属定制：同步按钮高级 UI (强力穿透版)
-    st.markdown("""
-        <style>
-        /* 核心秘籍：将左侧整体向上提拉，与右侧表格顶部精准平齐 */
-        [data-testid="column"]:first-child {
-            margin-top: -3.5rem !important;
-        }
-        /* 1. 精准锁定普通按钮（获取云端数据）与下载按钮的公共外观，确保尺寸、圆角、高度 100% 一致 */
-        div[data-testid="stButton"] > button, 
-        div[data-testid="stDownloadButton"] > button {
-            width: 100% !important;
-            background: linear-gradient(135deg, #ffffff 0%, #f0fdf9 100%) !important;
-            border: 1px solid #4ecca3 !important;
-            border-radius: 12px !important;
-            padding: 10px 0 !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            box-shadow: 0 4px 6px -1px rgba(78, 204, 163, 0.1) !important;
-        }
-        
-        /* 统一文字样式 */
-        div[data-testid="stButton"] > button p, 
-        div[data-testid="stDownloadButton"] > button p {
-            font-size: 1.05rem !important;
-            font-weight: 700 !important;
-            color: #1e293b !important;
-            transition: all 0.3s ease !important;
-            letter-spacing: 0.5px !important;
-        }
-        
-        /* 2. 【获取云端数据】按钮悬浮：保持原有的青绿色光晕 */
-        div[data-testid="stButton"] > button:hover {
-            background: linear-gradient(135deg, #4ecca3 0%, #45b894 100%) !important;
-            border-color: #45b894 !important;
-            transform: translateY(-2px) !important;
-            box-shadow: 0 10px 15px -3px rgba(78, 204, 163, 0.3) !important;
-        }
-        div[data-testid="stButton"] > button:hover p {
-            color: #ffffff !important;
-        }
-        
-        /* 3. 【下载最新 CSV 备份】按钮悬浮：完美切换为你指定的 #0094D9 填充色 */
-        div[data-testid="stDownloadButton"] > button:hover {
-            background: linear-gradient(135deg, #0094D9 0%, #007bb5 100%) !important;
-            border-color: #007bb5 !important;
-            transform: translateY(-2px) !important;
-            box-shadow: 0 10px 15px -3px rgba(0, 148, 217, 0.3) !important;
-        }
-        div[data-testid="stDownloadButton"] > button:hover p {
-            color: #ffffff !important;
-        }
-        
-        /* 点击时的微小下沉动效 */
-        div[data-testid="stButton"] > button:active,
-        div[data-testid="stDownloadButton"] > button:active {
-            transform: translateY(1px) !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
     # 1. 顶部：表格数据同步与下载模块
     st.markdown("### 🔄 表格数据同步与下载")
-    if st.button("同步表格数据", use_container_width=True):
+    if st.button("获取云端数据", use_container_width=True):
         st.session_state.df = load_data()
         st.toast("✅ 已成功同步表格最新数据！", icon="🔄")
         st.rerun()
 
-    # 紧接着放下载备份文件按钮（现在它的尺寸和获取云端数据完全一致了）
+    # 紧接着放下载备份文件按钮
     csv = st.session_state.df.to_csv(index=False).encode('utf-8-sig')
     st.download_button(
         label="下载表格数据",
@@ -305,7 +303,8 @@ with col_left:
     )
 
     st.markdown("<div style='margin: 18px 0;'></div>", unsafe_allow_html=True)
-    
+
+    # 2. 中部：添加新抗体表单
     st.markdown("### ➕ 添加新抗体")
     with st.form("add_antibody_form", clear_on_submit=True):
         new_target = st.text_input("靶点 (Target) *", placeholder="例: CD4")
@@ -326,40 +325,38 @@ with col_left:
                 updated_df = pd.concat([new_row, st.session_state.df], ignore_index=True)
                 save_data(updated_df)
                 st.rerun()
-        st.write("")
 
-# 🚨 新增：灾备模块 (覆盖恢复)  
-    
-    st.write("")
-    st.markdown("### 📥 数据恢复")
-    csv = st.session_state.df.to_csv(index=False).encode('utf-8-sig')
-    
-    st.markdown("<p style='font-size:0.9rem; color:#64748b; margin-top:20px; margin-bottom:5px;'>⚠️ 数据恢复 (管理员上传覆盖)</p>", unsafe_allow_html=True)
-    # st.markdown("<p style='font-size:0.9rem; color:#64748b; margin-top:15px; margin-bottom:5px;'>⚠️ 数据恢复 (仅限管理员上传覆盖)</p>", unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("导入本地 CSV 文件恢复库存", type=["csv"], label_visibility="collapsed")
+    st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
+
+    # 3. 下方：数据恢复模块
+    st.markdown("### ⚠️ 数据恢复")
+    st.markdown("<p style='font-size:0.85rem; color:#64748b; margin-bottom:8px;'>管理员导入本地 CSV 文件覆盖全库</p>", unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("导入备份文件恢复库存", type=["csv"], label_visibility="collapsed")
     
     if uploaded_file is not None:
         if st.button("🚨 确认使用此文件覆盖全库数据", type="primary", use_container_width=True):
             try:
                 uploaded_df = pd.read_csv(uploaded_file)
-                # 严格按照规范重置表头，防止传入脏数据
                 for col in EXPECTED_COLS:
                     if col not in uploaded_df.columns:
                         uploaded_df[col] = ""
                 uploaded_df = uploaded_df[EXPECTED_COLS].fillna("")
-                
-                # 覆盖保存并触发云端回传
                 save_data(uploaded_df)
-                st.success("✅ 数据已成功恢复，并同步至云端！")
+                st.success("✅ 数据已成功恢复并同步至云端！")
                 st.rerun()
             except Exception as e:
-                st.error(f"❌ 文件读取失败，请确保上传的是标准备份文件。错误: {e}")
-# 💎 左侧专属开发者控制台铭牌
+                st.error(f"❌ 读取失败。错误: {e}")
+
+    st.markdown("<div style='margin: 25px 0;'></div>", unsafe_allow_html=True)
+
+    # ==========================================
+    # 💎 最底部：ZJW 专属系统架构师铭牌
+    # ==========================================
     st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(78,204,163,0.08) 0%, rgba(78,204,163,0.02) 100%); border: 1px solid rgba(78,204,163,0.3); padding: 22px; border-radius: 16px; margin-top: 2rem; box-shadow: 0 4px 15px -5px rgba(0,0,0,0.05);">
-            <p style="margin: 0; color: #64748b; font-size: 0.8rem; font-weight: 700; letter-spacing: 1.5px;">SYSTEM ARCHITECT</p>
-            <p style="margin: 5px 0 0 0; color: #4ecca3; font-size: 1.6rem; font-weight: 800;">ZJW <span style="font-size: 1.2rem;"> </span></p>
-            <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 0.85rem;">Flow Cytometry Inventory V1.0</p>
+        <div style='background: linear-gradient(135deg, #f0fdf9 0%, #e6fcf5 100%); border: 1.5px solid #4ecca3; border-radius: 16px; padding: 16px 20px; box-shadow: 0 4px 12px rgba(78, 204, 163, 0.12); position: relative; overflow: hidden;'>
+            <p style='font-size: 0.7rem; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 2px 0;'>System Architect</p>
+            <h3 style='color: #047857; font-weight: 800; font-size: 1.4rem; margin: 0 0 2px 0; letter-spacing: 0.5px;'>ZJW</h3>
+            <p style='font-size: 0.75rem; font-weight: 600; color: #64748b; margin: 0;'>Flow Cytometry Inventory V1.0</p>
         </div>
     """, unsafe_allow_html=True)
 
