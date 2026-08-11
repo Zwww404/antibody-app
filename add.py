@@ -305,6 +305,6 @@ with col_right:
 # ==========================================
 st.markdown("""
     <div style="text-align: center; margin-top: 50px; padding: 20px; color: #94a3b8; font-size: 0.9rem; border-top: 1px solid #e2e8f0;">
-        Designed by <b>ZJW</b> ⚡ | <span style="font-size: 0.8rem;">V 1.0</span>
+        Designed by <b>ZJW</b>  | <span style="font-size: 0.8rem;">V 1.0</span>
     </div>
 """, unsafe_allow_html=True)
