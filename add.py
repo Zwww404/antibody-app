@@ -110,7 +110,7 @@ if not st.session_state["logged_in"]:
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         with st.form("login_form"):
-            user_input = st.text_input("访问密码", type="password", placeholder="Press Enter to unlock")
+            user_input = st.text_input("密码", type="password", placeholder="Press Enter to unlock")
             
             # 按钮抛弃原生 primary 属性，全靠 CSS 定制颜色
             submit_button = st.form_submit_button("登录系统", use_container_width=True)
