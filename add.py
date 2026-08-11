@@ -65,7 +65,7 @@ if not st.session_state["logged_in"]:
         [data-testid="stForm"] label, [data-testid="stForm"] label p {
             color: #1e293b !important;
             font-weight: 800 !important; 
-            font-size: 1.3rem !important; /* 强制拉大字号 */
+            font-size: 1.2rem !important; /* 强制拉大字号 */
             margin-bottom: 0.4rem !important;
         }
         
