@@ -248,16 +248,16 @@ with col_left:
 
     # ==========================================
     # 🔄 新增：数据实时同步模块
-    # ==========================================
+    # 💎 专属定制：同步按钮高级 UI 
     # ==========================================
     # 🔄 新增：数据实时同步模块
     # ==========================================
     
-    # 💎 专属定制：同步按钮高级 UI 
+    # 💎 专属定制：同步按钮高级 UI (强力穿透版)
     st.markdown("""
         <style>
-        /* 锁定基础次级按钮进行深度美化 */
-        [data-testid="baseButton-secondary"] {
+        /* 直接锁定 standard button 的父级容器，精准打击真正的按钮 */
+        div[data-testid="stButton"] > button {
             background: linear-gradient(135deg, #ffffff 0%, #f0fdf9 100%) !important;
             border: 1px solid #4ecca3 !important;
             border-radius: 12px !important;
@@ -265,37 +265,39 @@ with col_left:
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
             box-shadow: 0 4px 6px -1px rgba(78, 204, 163, 0.1) !important;
         }
-        [data-testid="baseButton-secondary"] p {
+        div[data-testid="stButton"] > button p {
             font-size: 1.05rem !important;
             font-weight: 700 !important;
             color: #1e293b !important;
             transition: all 0.3s ease !important;
             letter-spacing: 0.5px !important;
         }
-        /* 鼠标悬浮时的魔法呼吸发光效果 */
-        [data-testid="baseButton-secondary"]:hover {
+        /* 鼠标悬浮时的青绿光晕效果 */
+        div[data-testid="stButton"] > button:hover {
             background: linear-gradient(135deg, #4ecca3 0%, #45b894 100%) !important;
             border-color: #45b894 !important;
             transform: translateY(-2px) !important;
             box-shadow: 0 10px 15px -3px rgba(78, 204, 163, 0.3) !important;
         }
-        [data-testid="baseButton-secondary"]:hover p {
+        div[data-testid="stButton"] > button:hover p {
             color: #ffffff !important;
         }
-        [data-testid="baseButton-secondary"]:active {
+        div[data-testid="stButton"] > button:active {
             transform: translateY(1px) !important;
         }
         </style>
     """, unsafe_allow_html=True)
 
     st.markdown("### 🔄 表格数据同步")
-    # 顺手加了个小火箭 emoji，让文案也灵动起来
     if st.button("获取云端数据", use_container_width=True):
         st.session_state.df = load_data()
         st.toast("✅ 已成功同步表格最新数据！", icon="🔄")
         st.rerun()
 
-    st.write("")
+    # 💥 核心修复：这里千万不要写 st.write("") 了，直接紧贴着进入下一个灾备模块，间距就会变得非常紧凑美观。
+    # ==========================================
+    # 🚨 新增：灾备模块 (下载与覆盖恢复)
+    # ==========================================
 # 🚨 新增：灾备模块 (下载与覆盖恢复)
 # 💎 为下载按钮单独注入的高级 CSS 样式
     st.markdown("""
