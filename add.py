@@ -244,17 +244,37 @@ with col_left:
                 updated_df = pd.concat([new_row, st.session_state.df], ignore_index=True)
                 save_data(updated_df)
                 st.rerun()
-
+# 🚨 新增：灾备模块 (下载与覆盖恢复)
     st.write("")
-    st.markdown("### 📥 数据备份")
+    st.markdown("### 📥 数据备份与恢复")
     csv = st.session_state.df.to_csv(index=False).encode('utf-8-sig')
     st.download_button(
-        label="手动下载最新 CSV 备份",
+        label="⬇️ 手动下载最新 CSV 备份",
         data=csv,
         file_name='抗体库存备份.csv',
         mime='text/csv',
         use_container_width=True
     )
+    
+    st.markdown("<p style='font-size:0.9rem; color:#64748b; margin-top:15px; margin-bottom:5px;'>⚠️ 灾难恢复 (仅限管理员上传覆盖)</p>", unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("导入本地 CSV 文件恢复库存", type=["csv"], label_visibility="collapsed")
+    
+    if uploaded_file is not None:
+        if st.button("🚨 确认使用此文件覆盖全库数据", type="primary", use_container_width=True):
+            try:
+                uploaded_df = pd.read_csv(uploaded_file)
+                # 严格按照规范重置表头，防止传入脏数据
+                for col in EXPECTED_COLS:
+                    if col not in uploaded_df.columns:
+                        uploaded_df[col] = ""
+                uploaded_df = uploaded_df[EXPECTED_COLS].fillna("")
+                
+                # 覆盖保存并触发云端回传
+                save_data(uploaded_df)
+                st.success("✅ 数据已成功恢复，并同步至云端！")
+                st.rerun()
+            except Exception as e:
+                st.error(f"❌ 文件读取失败，请确保上传的是标准备份文件。错误: {e}")
 
 with col_right:
     st.markdown("### 📊 库存总览与快速筛选")
