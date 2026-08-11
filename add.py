@@ -16,7 +16,6 @@ if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 
 if not st.session_state["logged_in"]:
-    # 专属登录页 CSS 注入
     st.markdown("""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -25,14 +24,8 @@ if not st.session_state["logged_in"]:
         footer {visibility: hidden;}
         header {visibility: hidden;}
         
-        .stApp {
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* 整体大幅下移，使其视觉居中 */
-        .block-container {
-            padding-top: 22vh !important; 
-        }
+        .stApp { font-family: 'Inter', sans-serif; }
+        .block-container { padding-top: 22vh !important; }
 
         .login-title {
             text-align: center;
@@ -49,36 +42,38 @@ if not st.session_state["logged_in"]:
             font-weight: 400;
         }
 
-        /* 毛玻璃表单框 */
+        /* 强制将表单框变为纯白色，并加入柔和阴影 */
         [data-testid="stForm"] {
-            background: rgba(128, 128, 128, 0.05);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(128, 128, 128, 0.15);
+            background-color: #ffffff !important; 
+            border: 1px solid #e2e8f0 !important;
             border-radius: 20px;
             padding: 40px 30px;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
         }
         
-        /* 密码输入框美化 */
+        /* 强制表单内的字体颜色为深灰，防止在深色模式下变白字看不见 */
+        [data-testid="stForm"] label {
+            color: #1e293b !important;
+            font-weight: 600 !important;
+            font-size: 1.05rem !important;
+        }
+        
+        /* 密码输入框的纯白清爽样式 */
         [data-testid="stTextInput"] input {
             border-radius: 10px;
             padding: 12px 16px;
-            background-color: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(128, 128, 128, 0.2);
+            background-color: #f8fafc !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #0f172a !important;
             font-size: 1rem;
-            letter-spacing: 2px;
         }
         [data-testid="stTextInput"] input:focus {
-            border-color: #ff4b4b; 
-            box-shadow: 0 0 0 2px rgba(255, 75, 75, 0.2);
+            border-color: #ff4b4b !important; 
+            box-shadow: 0 0 0 2px rgba(255, 75, 75, 0.2) !important;
         }
         
-        /* 增加按钮上方的间距，让排版更透气 */
-        [data-testid="stForm"] .stButton {
-            margin-top: 20px;
-        }
+        /* 按钮上方留白 */
+        [data-testid="stForm"] .stButton { margin-top: 20px; }
         </style>
     """, unsafe_allow_html=True)
 
@@ -88,10 +83,8 @@ if not st.session_state["logged_in"]:
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         with st.form("login_form"):
-            st.markdown("<p style='font-weight: 600; margin-bottom: -10px;'>访问密码</p>", unsafe_allow_html=True)
-            user_input = st.text_input("访问密码", type="password", placeholder="Press Enter to unlock", label_visibility="collapsed")
-            
-            # 使用原生的 primary 样式并强制拉宽居中
+            # 【彻底修复】：去掉自定义的 <p> 标签，直接使用原生的 label，绝对不会再重叠
+            user_input = st.text_input("访问密码", type="password", placeholder="Press Enter to unlock")
             submit_button = st.form_submit_button("解锁系统", type="primary", use_container_width=True)
             
             if submit_button:
@@ -99,9 +92,8 @@ if not st.session_state["logged_in"]:
                     st.session_state["logged_in"] = True
                     st.rerun()
                 else:
-                    st.error("❌ 密钥效验失败，请重试。")
+                    st.error("❌ 密码错误，请重试。")
     
-    # 拦截程序
     st.stop()
 
 # ==========================================
