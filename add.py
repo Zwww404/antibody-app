@@ -245,18 +245,46 @@ with col_left:
                 save_data(updated_df)
                 st.rerun()
 # 🚨 新增：灾备模块 (下载与覆盖恢复)
+    # 💎 为下载按钮单独注入的高级 CSS 样式
+    st.markdown("""
+        <style>
+        /* 针对下载按钮的专属美化 */
+        [data-testid="stDownloadButton"] button {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #334155 !important;
+            border-radius: 12px !important;
+            padding: 10px 0 !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02) !important;
+        }
+        [data-testid="stDownloadButton"] button p {
+            font-weight: 600 !important;
+            font-size: 1.05rem !important;
+            letter-spacing: 0.5px !important;
+        }
+        /* 鼠标悬浮时的高级青绿交互动效 */
+        [data-testid="stDownloadButton"] button:hover {
+            background: #ffffff !important;
+            border-color: #4ecca3 !important;
+            color: #4ecca3 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 15px -3px rgba(78, 204, 163, 0.25), 0 4px 6px -2px rgba(78, 204, 163, 0.1) !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
     st.write("")
     st.markdown("### 📥 数据备份与恢复")
     csv = st.session_state.df.to_csv(index=False).encode('utf-8-sig')
     st.download_button(
-        label="⬇️ 手动下载最新 CSV 备份",
+        label="⬇️ 下载最新 CSV 备份",
         data=csv,
         file_name='抗体库存备份.csv',
         mime='text/csv',
         use_container_width=True
     )
-    
-    st.markdown("<p style='font-size:0.9rem; color:#64748b; margin-top:15px; margin-bottom:5px;'>⚠️ 灾难恢复 (仅限管理员上传覆盖)</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:0.9rem; color:#64748b; margin-top:20px; margin-bottom:5px;'>⚠️ 数据恢复 (仅限管理员上传覆盖)</p>", unsafe_allow_html=True)
+    # st.markdown("<p style='font-size:0.9rem; color:#64748b; margin-top:15px; margin-bottom:5px;'>⚠️ 数据恢复 (仅限管理员上传覆盖)</p>", unsafe_allow_html=True)
     uploaded_file = st.file_uploader("导入本地 CSV 文件恢复库存", type=["csv"], label_visibility="collapsed")
     
     if uploaded_file is not None:
