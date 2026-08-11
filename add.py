@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 st.set_page_config(page_title="流式抗体管理系统", page_icon="🔬", layout="wide")
 
 # ==========================================
-# 🔐 1. 密码验证系统
+# 🔐 1. 旗舰级高级密码验证 UI (全局纯白修复版)
 # ==========================================
 LAB_PASSWORD = "wangxuefeng"
 
@@ -16,7 +16,8 @@ if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 
 if not st.session_state["logged_in"]:
-st.markdown("""
+    # 注意这里：if 语句下面的所有内容都正确保留了缩进
+    st.markdown("""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
@@ -24,34 +25,41 @@ st.markdown("""
         footer {visibility: hidden;}
         header {visibility: hidden;}
         
+        /* 🌟 强制整个网页大背景变为柔和的亮色，无视电脑的深色模式 */
+        [data-testid="stAppViewContainer"] {
+            background-color: #f0f4f8 !important; 
+        }
+        
         .stApp { font-family: 'Inter', sans-serif; }
         .block-container { padding-top: 22vh !important; }
 
+        /* 强制标题颜色为深黑，副标题为深灰 */
         .login-title {
             text-align: center;
             font-weight: 700;
             font-size: 2.2rem;
             margin-bottom: 0.5rem;
             letter-spacing: 1px;
+            color: #0f172a !important; 
         }
         .login-subtitle {
             text-align: center;
-            color: #888888;
             font-size: 1rem;
             margin-bottom: 2rem;
             font-weight: 400;
+            color: #64748b !important; 
         }
 
-        /* 强制将表单框变为纯白色，并加入柔和阴影 */
+        /* 表单框纯白色，并加入适配浅色背景的柔和阴影 */
         [data-testid="stForm"] {
             background-color: #ffffff !important; 
             border: 1px solid #e2e8f0 !important;
             border-radius: 20px;
             padding: 40px 30px;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
         
-        /* 强制表单内的字体颜色为深灰，防止在深色模式下变白字看不见 */
+        /* 强制表单内的字体颜色为深色 */
         [data-testid="stForm"] label {
             color: #1e293b !important;
             font-weight: 600 !important;
@@ -83,7 +91,6 @@ st.markdown("""
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         with st.form("login_form"):
-            # 【彻底修复】：去掉自定义的 <p> 标签，直接使用原生的 label，绝对不会再重叠
             user_input = st.text_input("访问密码", type="password", placeholder="Press Enter to unlock")
             submit_button = st.form_submit_button("解锁系统", type="primary", use_container_width=True)
             
@@ -95,7 +102,6 @@ st.markdown("""
                     st.error("❌ 密码错误，请重试。")
     
     st.stop()
-
 # ==========================================
 # 🔬 2. 核心 UI 与逻辑
 # ==========================================
