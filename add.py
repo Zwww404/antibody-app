@@ -481,9 +481,15 @@ with col_right:
             "Target": st.column_config.TextColumn("🎯 靶点 (Target)"),
             "Fluorophore": st.column_config.TextColumn("🌈 荧光素"),
             "Localization": st.column_config.SelectboxColumn("📍 位置", options=["Surface (表面)", "Intracellular (胞内)", "Intranuclear (核内)"]),
-            "Clone": st.column_config.TextColumn("🏷️ 克隆号"),
+            
+            # 👇 新增：带有水滴 Emoji 的体积列配置，限制最小值为 0，保留一位小数
+            "Volume": st.column_config.NumberColumn("💧 体积 (Volume)", min_value=0.0, format="%.1f"),
+            
             "Box_Location": st.column_config.TextColumn("📦 存放位置"),
-            "Status": st.column_config.SelectboxColumn("🚥 状态", options=["In Use (使用中)", "Low (快用完)", "Empty (待采购)", "Expired (已过期)"])
+            "Status": st.column_config.SelectboxColumn("🚥 状态", options=["In Use (使用中)", "Low (快用完)", "Empty (待采购)", "Expired (已过期)"]),
+            
+            # 👇 调整：把克隆号挪到最后一行，完成垫底
+            "Clone": st.column_config.TextColumn("🏷️ 克隆号")
         },
         hide_index=True
     )
