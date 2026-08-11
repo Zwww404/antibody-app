@@ -246,13 +246,13 @@ with col_left:
                 st.rerun()
     st.write("")
 # ==========================================
-# 🔄 新增：数据实时同步模块
-# ==========================================
+    # 🔄 新增：数据实时同步模块
+    # ==========================================
     st.markdown("### 🔄 团队数据同步")
     if st.button("获取云端最新库存", use_container_width=True):
-    st.session_state.df = load_data()
-    st.toast("✅ 已成功同步团队最新数据！", icon="🔄")
-    st.rerun()
+        st.session_state.df = load_data()
+        st.toast("✅ 已成功同步团队最新数据！", icon="🔄")
+        st.rerun()
 
     st.write("")
 # 🚨 新增：灾备模块 (下载与覆盖恢复)
