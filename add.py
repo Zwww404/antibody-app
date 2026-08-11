@@ -391,7 +391,7 @@ with col_left:
         st.write("")
         submitted_batch = st.form_submit_button("⚡ 确认扣减选定用量", use_container_width=True)
         
-        if submitted_batch:
+       if submitted_batch:
             if not selected_abs:
                 st.error("⚠️ 请先在上方选择你使用的抗体！")
             else:
@@ -402,16 +402,20 @@ with col_left:
                     
                     old_vol = updated_df.at[idx, 'Volume']
                     
-                    # 防崩溃防御机制：只有当原体积不是空白时，才进行数学减法扣减
-                    if old_vol != "":
-                        new_vol = max(0.0, float(old_vol) - float(consumed_vol))
-                        updated_df.at[idx, 'Volume'] = new_vol
-                        
-                        # 智能状态联动
-                        if new_vol == 0.0:
-                            updated_df.at[idx, 'Status'] = "Empty (待采购)"
-                        elif new_vol <= 10.0 and updated_df.at[idx, 'Status'] == "In Use (使用中)":
-                            updated_df.at[idx, 'Status'] = "Low (快用完)"
+                    # 👑 究极防崩溃装甲：全面拦截 None、NaN、纯空格和各种诡异空白
+                    if pd.notna(old_vol) and old_vol is not None and str(old_vol).strip() != "":
+                        try:
+                            new_vol = max(0.0, float(old_vol) - float(consumed_vol))
+                            updated_df.at[idx, 'Volume'] = new_vol
+                            
+                            # 智能状态联动
+                            if new_vol == 0.0:
+                                updated_df.at[idx, 'Status'] = "Empty (待采购)"
+                            elif new_vol <= 10.0 and updated_df.at[idx, 'Status'] == "In Use (使用中)":
+                                updated_df.at[idx, 'Status'] = "Low (快用完)"
+                        except (ValueError, TypeError):
+                            # 万一碰上其它神仙数据，默默跳过，保护主程序不崩
+                            pass
                             
                 save_data(updated_df)
                 st.success("✅ 操作成功！(注: 未记录初始体积的抗体已被自动跳过扣减)")
