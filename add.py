@@ -220,8 +220,6 @@ def save_data(df):
 
 # ==========================================
 # ==========================================
-# ==========================================
-# ==========================================
 # 🚀 4. 全局界面渲染与左右分栏逻辑
 # ==========================================
 
@@ -232,23 +230,19 @@ st.markdown("""
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    
+    /* 核心表单与提交按钮美化 */
     [data-testid="stForm"] { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025); }
     [data-testid="stFormSubmitButton"] > button { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 8px; font-weight: 600; padding: 0.5rem 1rem; transition: all 0.3s ease; }
     [data-testid="stFormSubmitButton"] > button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4); }
+    
+    /* 标题颜色统一 */
     h1 { font-weight: 700 !important; color: #0f172a !important; }
     h2, h3 { font-weight: 600 !important; color: #1e293b !important; }
 
     /* ========================================================= */
-    /* 🚀 修复版定位锁定：精确制导左侧列，绝不误伤其他外层容器！ */
+    /* 💎 双按钮高级科技 UI (已去除强制位移，完美兼容手机端) */
     /* ========================================================= */
-    div[data-testid="column"]:has(#left_column_anchor),
-    div[data-testid="stColumn"]:has(#left_column_anchor) {
-        transform: translateY(-165px) !important;
-        margin-bottom: -165px !important;
-        z-index: 999;
-    }
-
-    /* 💎 双按钮高级科技 UI */
     div[data-testid="stButton"] > button, 
     div[data-testid="stDownloadButton"] > button {
         width: 100% !important;
@@ -267,6 +261,8 @@ st.markdown("""
         transition: all 0.3s ease !important;
         letter-spacing: 0.5px !important;
     }
+    
+    /* 【获取云端数据】悬浮青绿光晕 */
     div[data-testid="stButton"] > button:hover {
         background: linear-gradient(135deg, #4ecca3 0%, #45b894 100%) !important;
         border-color: #45b894 !important;
@@ -276,6 +272,8 @@ st.markdown("""
     div[data-testid="stButton"] > button:hover p {
         color: #ffffff !important;
     }
+    
+    /* 【下载表格数据】悬浮 #0094D9 科技蓝填充 */
     div[data-testid="stDownloadButton"] > button:hover {
         background: linear-gradient(135deg, #0094D9 0%, #007bb5 100%) !important;
         border-color: #007bb5 !important;
@@ -285,6 +283,8 @@ st.markdown("""
     div[data-testid="stDownloadButton"] > button:hover p {
         color: #ffffff !important;
     }
+    
+    /* 点击下沉动效 */
     div[data-testid="stButton"] > button:active,
     div[data-testid="stDownloadButton"] > button:active {
         transform: translateY(1px) !important;
