@@ -220,6 +220,7 @@ def save_data(df):
 
 # ==========================================
 # ==========================================
+# ==========================================
 # 🚀 4. 全局界面渲染与左右分栏逻辑
 # ==========================================
 
@@ -237,10 +238,12 @@ st.markdown("""
     h2, h3 { font-weight: 600 !important; color: #1e293b !important; }
 
     /* ========================================================= */
-    /* 🚀 核心空间位移魔法：无视底层引擎强制提拉整个左侧！ */
+    /* 🚀 究极定位锁定：兼容新旧版 Streamlit，强行精准提拉左侧列！ */
     /* ========================================================= */
-    [data-testid="column"]:nth-of-type(1) {
-        transform: translateY(-165px) !important; 
+    div[data-testid="column"]:first-of-type,
+    div[data-testid="stColumn"]:first-of-type,
+    div:has(#left_column_anchor) {
+        transform: translateY(-165px) !important;
         margin-bottom: -165px !important;
         z-index: 999;
     }
@@ -289,10 +292,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 定义左右分栏
+
 col_left, col_right = st.columns([1, 2.5], gap="large")
 
 with col_left:
+    # 🔑 极其关键的一行：这就是我们埋在左侧的“隐形定位锚点”，供 CSS 追踪使用！
+    st.markdown("<div id='left_column_anchor'></div>", unsafe_allow_html=True)
+
     # 1. 顶部：表格数据同步与下载模块
     st.markdown("### 🔄 表格数据同步与下载")
     if st.button("获取云端数据", use_container_width=True):
