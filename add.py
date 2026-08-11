@@ -2,8 +2,47 @@ import streamlit as st
 import pandas as pd
 import os
 
-st.set_page_config(page_title="流式抗体库存管理系统", page_icon="🔬", layout="wide")
+st.set_page_config(page_title="流式抗体管理系统", page_icon="🔬", layout="wide")
 
+# ==========================================
+# 🔐 1. 简易密码验证系统
+# ==========================================
+
+# 在这里设置你想要的密码（不要太复杂，方便实验室同学输入）
+LAB_PASSWORD = "wangxuefeng"
+
+# 检查当前用户的登录状态
+if "logged_in" not in st.session_state:
+    st.session_state["logged_in"] = False
+
+# 如果没有登录，渲染登录界面并拦截后续所有代码执行
+if not st.session_state["logged_in"]:
+    st.markdown("<h2 style='text-align: center; margin-top: 100px;'>🔒 肿瘤免疫流式抗体库存系统</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #666;'>请输入课题组专属访问密码</p>", unsafe_allow_html=True)
+    
+    # 将输入框居中
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        with st.form("login_form"):
+            user_input = st.text_input("访问密码", type="password", placeholder="输入密码后按回车")
+            submit_button = st.form_submit_button("解锁系统", use_container_width=True)
+            
+            if submit_button:
+                if user_input == LAB_PASSWORD:
+                    st.session_state["logged_in"] = True
+                    st.rerun() # 密码正确，重新运行代码跳过登录界面
+                else:
+                    st.error("❌ 密码错误，请联系管理员获取正确密码。")
+    
+    # st.stop() 非常关键：它会让程序在这里停止运行，底下的核心系统代码绝对不会暴露
+    st.stop()
+
+
+# ==========================================
+# 🔬 2. 核心系统代码 (只有密码正确才会执行到这里)
+# ==========================================
+
+# --- 以下全是你之前的完美 UI 和逻辑代码 ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
@@ -19,7 +58,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 免疫流式抗体库存系统</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 肿瘤免疫流式抗体库存系统</h1>", unsafe_allow_html=True)
 
 DATA_FILE = "antibodies.csv"
 EXPECTED_COLS = ["Target", "Fluorophore", "Localization", "Clone", "Box_Location", "Status"]
@@ -40,8 +79,6 @@ def load_data():
         "状态": "Status"
     }
     df = df.rename(columns=rename_map)
-    
-    # 【紧急修复点】暴力剔除由于历史遗留问题产生的重复列
     df = df.loc[:, ~df.columns.duplicated()]
     
     for col in EXPECTED_COLS:
