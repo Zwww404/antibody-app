@@ -334,13 +334,17 @@ with col_left:
 
     st.markdown("<div style='margin: 18px 0;'></div>", unsafe_allow_html=True)
 
-    # 2. 中部：添加新抗体表单
+    # ➕ 中部：添加新抗体表单 (克隆号下岗，体积上位)
+    # ==========================================
     st.markdown("### ➕ 添加新抗体")
     with st.form("add_antibody_form", clear_on_submit=True):
         new_target = st.text_input("靶点 (Target) *", placeholder="例: CD4")
         new_fluor = st.text_input("荧光素 (Fluorophore) *", placeholder="例: BV421")
         new_loc = st.selectbox("抗原位置 (Localization)", ["Surface (表面)", "Intracellular (胞内)", "Intranuclear (核内)"])
-        new_clone = st.text_input("克隆号 (Clone)", placeholder="例: RM4-5")
+        
+        # 👑 核心替换：原先的克隆号被替换成了初始体积
+        new_volume = st.number_input("初始体积 (Volume µL)", value=None, placeholder="可留空不填", min_value=0.0, step=10.0)
+        
         new_box = st.text_input("物理位置 (Location)", placeholder="例: 4℃-Box1-A2")
         new_status = st.selectbox("状态 (Status)", ["In Use (使用中)", "Low (快用完)", "Empty (待采购)", "Expired (已过期)"])
         
@@ -351,9 +355,66 @@ with col_left:
             if not new_target or not new_fluor:
                 st.error("操作失败：请务必填写【靶点】和【荧光素】！")
             else:
-                new_row = pd.DataFrame([[new_target, new_fluor, new_loc, new_clone, new_box, new_status]], columns=EXPECTED_COLS)
+                vol_to_save = new_volume if new_volume is not None else ""
+                # 严格按照列顺序排列：靶点, 荧光素, 位置, 体积, 物理位置, 状态, 克隆号(留空)
+                new_row = pd.DataFrame([[new_target, new_fluor, new_loc, vol_to_save, new_box, new_status, ""]], columns=EXPECTED_COLS)
                 updated_df = pd.concat([new_row, st.session_state.df], ignore_index=True)
                 save_data(updated_df)
+                st.rerun()
+
+    st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
+
+    # ==========================================
+    # 🧪 核心新功能：实验 Panel 批量扣减引擎
+    # ==========================================
+    st.markdown("### 🧪 实验 Panel 批量扣减")
+    with st.form("batch_deduct_form", clear_on_submit=True):
+        st.caption("按住 `Ctrl` 键可多选，一次性扣除本次实验消耗的抗体。")
+        
+        # 准备下拉选项（智能识别是否为空白体积）
+        df_opts = st.session_state.df.copy()
+        valid_opts = df_opts[df_opts["Target"] != ""]
+        options = []
+        for idx, row in valid_opts.iterrows():
+            vol_str = f"剩 {row['Volume']} µL" if row['Volume'] != "" else "未记录体积"
+            options.append(f"[{idx}] {row['Target']} - {row['Fluorophore']} ({vol_str})")
+            
+        selected_abs = st.multiselect("🔍 选择本次实验使用的抗体", options)
+        
+        deduction_dict = {}
+        if selected_abs:
+            st.markdown("<p style='font-size: 0.9rem; font-weight: 600; color: #3b82f6; margin-top: 10px;'>👇 请设定单管消耗量 (µL)：</p>", unsafe_allow_html=True)
+            for sel in selected_abs:
+                name_display = sel.split("] ")[1].split(" (")[0]
+                deduction_dict[sel] = st.number_input(f"💧 {name_display}", min_value=0.1, value=1.0, step=0.5, key=sel)
+        
+        st.write("")
+        submitted_batch = st.form_submit_button("⚡ 确认扣减选定用量", use_container_width=True)
+        
+        if submitted_batch:
+            if not selected_abs:
+                st.error("⚠️ 请先在上方选择你使用的抗体！")
+            else:
+                updated_df = st.session_state.df.copy()
+                for sel in selected_abs:
+                    idx = int(sel.split("]")[0].replace("[", ""))
+                    consumed_vol = deduction_dict[sel]
+                    
+                    old_vol = updated_df.at[idx, 'Volume']
+                    
+                    # 防崩溃防御机制：只有当原体积不是空白时，才进行数学减法扣减
+                    if old_vol != "":
+                        new_vol = max(0.0, float(old_vol) - float(consumed_vol))
+                        updated_df.at[idx, 'Volume'] = new_vol
+                        
+                        # 智能状态联动
+                        if new_vol == 0.0:
+                            updated_df.at[idx, 'Status'] = "Empty (待采购)"
+                        elif new_vol <= 10.0 and updated_df.at[idx, 'Status'] == "In Use (使用中)":
+                            updated_df.at[idx, 'Status'] = "Low (快用完)"
+                            
+                save_data(updated_df)
+                st.success("✅ 操作成功！(注: 未记录初始体积的抗体已被自动跳过扣减)")
                 st.rerun()
 
     st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
