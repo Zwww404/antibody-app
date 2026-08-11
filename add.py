@@ -19,25 +19,21 @@ if not st.session_state["logged_in"]:
     # 专属登录页 CSS 注入
     st.markdown("""
         <style>
-        /* 引入高级字体 */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
-        /* 隐藏顶部菜单和底部水印 */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
         
-        /* 全局背景微调，让毛玻璃更凸显 */
         .stApp {
             font-family: 'Inter', sans-serif;
         }
 
-        /* 调整整体下移，居中视觉 */
+        /* 整体大幅下移，使其视觉居中 */
         .block-container {
-            padding-top: 12vh !important;
+            padding-top: 22vh !important; 
         }
 
-        /* 标题排版美化 */
         .login-title {
             text-align: center;
             font-weight: 700;
@@ -53,71 +49,50 @@ if not st.session_state["logged_in"]:
             font-weight: 400;
         }
 
-        /* 🌟 核心：毛玻璃悬浮表单框 */
+        /* 毛玻璃表单框 */
         [data-testid="stForm"] {
             background: rgba(128, 128, 128, 0.05);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(128, 128, 128, 0.15);
-            border-radius: 24px;
+            border-radius: 20px;
             padding: 40px 30px;
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        [data-testid="stForm"]:hover {
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.2);
-        }
-
+        
         /* 密码输入框美化 */
         [data-testid="stTextInput"] input {
-            border-radius: 12px;
-            padding: 14px 16px;
-            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 10px;
+            padding: 12px 16px;
             background-color: rgba(255, 255, 255, 0.03);
-            transition: all 0.3s ease;
+            border: 1px solid rgba(128, 128, 128, 0.2);
             font-size: 1rem;
             letter-spacing: 2px;
         }
         [data-testid="stTextInput"] input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-            background-color: transparent;
+            border-color: #ff4b4b; 
+            box-shadow: 0 0 0 2px rgba(255, 75, 75, 0.2);
         }
-
-        /* 渐变解锁按钮美化 */
-        [data-testid="stFormSubmitButton"] button {
-            background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 12px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 15px;
-        }
-        [data-testid="stFormSubmitButton"] button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px -6px rgba(59, 130, 246, 0.6);
-            color: white;
-            border: none;
+        
+        /* 增加按钮上方的间距，让排版更透气 */
+        [data-testid="stForm"] .stButton {
+            margin-top: 20px;
         }
         </style>
     """, unsafe_allow_html=True)
 
-    # 渲染精美标题
-    st.markdown("<div class='login-title'>🔬 流式抗体管理系统</div>", unsafe_allow_html=True)
+    st.markdown("<div class='login-title'>🔬 免疫流式抗体管理系统</div>", unsafe_allow_html=True)
     st.markdown("<div class='login-subtitle'>安全验证 · 请输入课题组专属密钥</div>", unsafe_allow_html=True)
     
-    # 将表单限制在中间列，控制宽度，使其看起来像一个精致的卡片
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         with st.form("login_form"):
             st.markdown("<p style='font-weight: 600; margin-bottom: -10px;'>访问密码</p>", unsafe_allow_html=True)
             user_input = st.text_input("访问密码", type="password", placeholder="Press Enter to unlock", label_visibility="collapsed")
-            submit_button = st.form_submit_button("解锁系统")
+            
+            # 使用原生的 primary 样式并强制拉宽居中
+            submit_button = st.form_submit_button("解锁系统", type="primary", use_container_width=True)
             
             if submit_button:
                 if user_input == LAB_PASSWORD:
@@ -126,7 +101,7 @@ if not st.session_state["logged_in"]:
                 else:
                     st.error("❌ 密钥效验失败，请重试。")
     
-    # 拦截程序，密码正确前绝不加载主界面
+    # 拦截程序
     st.stop()
 
 # ==========================================
