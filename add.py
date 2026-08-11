@@ -224,28 +224,7 @@ def save_data(df):
 col_left, col_right = st.columns([1, 2.5], gap="large")
 
 with col_left:
-    st.markdown("### ➕ 添加新抗体")
-    with st.form("add_antibody_form", clear_on_submit=True):
-        new_target = st.text_input("靶点 (Target) *", placeholder="例: CD4")
-        new_fluor = st.text_input("荧光素 (Fluorophore) *", placeholder="例: BV421")
-        new_loc = st.selectbox("抗原位置 (Localization)", ["Surface (表面)", "Intracellular (胞内)", "Intranuclear (核内)"])
-        new_clone = st.text_input("克隆号 (Clone)", placeholder="例: RM4-5")
-        new_box = st.text_input("物理位置 (Location)", placeholder="例: 4℃-Box1-A2")
-        new_status = st.selectbox("状态 (Status)", ["In Use (使用中)", "Low (快用完)", "Empty (待采购)", "Expired (已过期)"])
-        
-        st.write("")
-        submitted = st.form_submit_button("确认录入系统", use_container_width=True)
-        
-        if submitted:
-            if not new_target or not new_fluor:
-                st.error("操作失败：请务必填写【靶点】和【荧光素】！")
-            else:
-                new_row = pd.DataFrame([[new_target, new_fluor, new_loc, new_clone, new_box, new_status]], columns=EXPECTED_COLS)
-                updated_df = pd.concat([new_row, st.session_state.df], ignore_index=True)
-                save_data(updated_df)
-                st.rerun()
-        st.write("")
-
+    
     # ==========================================
     # 🔄 新增：数据实时同步模块
     # 💎 专属定制：同步按钮高级 UI 
@@ -293,11 +272,30 @@ with col_left:
         st.session_state.df = load_data()
         st.toast("✅ 已成功同步表格最新数据！", icon="🔄")
         st.rerun()
-
     # 💥 核心修复：这里千万不要写 st.write("") 了，直接紧贴着进入下一个灾备模块，间距就会变得非常紧凑美观。
-    # ==========================================
-    # 🚨 新增：灾备模块 (下载与覆盖恢复)
-    # ==========================================
+    
+    st.markdown("### ➕ 添加新抗体")
+    with st.form("add_antibody_form", clear_on_submit=True):
+        new_target = st.text_input("靶点 (Target) *", placeholder="例: CD4")
+        new_fluor = st.text_input("荧光素 (Fluorophore) *", placeholder="例: BV421")
+        new_loc = st.selectbox("抗原位置 (Localization)", ["Surface (表面)", "Intracellular (胞内)", "Intranuclear (核内)"])
+        new_clone = st.text_input("克隆号 (Clone)", placeholder="例: RM4-5")
+        new_box = st.text_input("物理位置 (Location)", placeholder="例: 4℃-Box1-A2")
+        new_status = st.selectbox("状态 (Status)", ["In Use (使用中)", "Low (快用完)", "Empty (待采购)", "Expired (已过期)"])
+        
+        st.write("")
+        submitted = st.form_submit_button("确认录入系统", use_container_width=True)
+        
+        if submitted:
+            if not new_target or not new_fluor:
+                st.error("操作失败：请务必填写【靶点】和【荧光素】！")
+            else:
+                new_row = pd.DataFrame([[new_target, new_fluor, new_loc, new_clone, new_box, new_status]], columns=EXPECTED_COLS)
+                updated_df = pd.concat([new_row, st.session_state.df], ignore_index=True)
+                save_data(updated_df)
+                st.rerun()
+        st.write("")
+
 # 🚨 新增：灾备模块 (下载与覆盖恢复)
 # 💎 为下载按钮单独注入的高级 CSS 样式
     st.markdown("""
