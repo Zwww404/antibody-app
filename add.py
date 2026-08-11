@@ -312,6 +312,14 @@ with col_left:
                 st.rerun()
             except Exception as e:
                 st.error(f"❌ 文件读取失败，请确保上传的是标准备份文件。错误: {e}")
+# 💎 左侧专属开发者控制台铭牌
+    st.markdown("""
+        <div style="background: linear-gradient(135deg, rgba(78,204,163,0.08) 0%, rgba(78,204,163,0.02) 100%); border: 1px solid rgba(78,204,163,0.3); padding: 22px; border-radius: 16px; margin-top: 2rem; box-shadow: 0 4px 15px -5px rgba(0,0,0,0.05);">
+            <p style="margin: 0; color: #64748b; font-size: 0.8rem; font-weight: 700; letter-spacing: 1.5px;">SYSTEM ARCHITECT</p>
+            <p style="margin: 5px 0 0 0; color: #4ecca3; font-size: 1.6rem; font-weight: 800;">ZJW <span style="font-size: 1.2rem;">⚡</span></p>
+            <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 0.85rem;">Flow Cytometry Inventory V1.0</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 with col_right:
     st.markdown("### 📊 库存总览与快速筛选")
