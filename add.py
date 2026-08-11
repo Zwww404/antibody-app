@@ -364,62 +364,76 @@ with col_left:
 
     st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
 
+   
     # ==========================================
-    # 🧪 核心新功能：实验 Panel 批量扣减引擎
+    # 🧪 核心新功能：实验 Panel 批量扣减引擎 (实时无缝交互版)
     # ==========================================
     st.markdown("### 🧪 实验 Panel 批量扣减")
-    with st.form("batch_deduct_form", clear_on_submit=True):
-        st.caption("按住 `Ctrl` 键可多选，一次性扣除本次实验消耗的抗体。")
+    st.caption("按住 `Ctrl` 键可多选，一次性扣除本次实验消耗的抗体。")
+    
+    # 准备下拉选项
+    df_opts = st.session_state.df.copy()
+    valid_opts = df_opts[df_opts["Target"] != ""]
+    options = []
+    for idx, row in valid_opts.iterrows():
+        vol_str = f"剩 {row['Volume']} µL" if row['Volume'] != "" else "未记录体积"
+        options.append(f"[{idx}] {row['Target']} - {row['Fluorophore']} ({vol_str})")
         
-        # 准备下拉选项（智能识别是否为空白体积）
-        df_opts = st.session_state.df.copy()
-        valid_opts = df_opts[df_opts["Target"] != ""]
-        options = []
-        for idx, row in valid_opts.iterrows():
-            vol_str = f"剩 {row['Volume']} µL" if row['Volume'] != "" else "未记录体积"
-            options.append(f"[{idx}] {row['Target']} - {row['Fluorophore']} ({vol_str})")
-            
-        selected_abs = st.multiselect("🔍 选择本次实验使用的抗体", options)
+    # 🔑 为下拉框绑定固定的系统状态，方便我们在扣减成功后“一键清空”
+    if "deduct_selections" not in st.session_state:
+        st.session_state.deduct_selections = []
         
-        deduction_dict = {}
-        if selected_abs:
-            st.markdown("<p style='font-size: 0.9rem; font-weight: 600; color: #3b82f6; margin-top: 10px;'>👇 请设定单管消耗量 (µL)：</p>", unsafe_allow_html=True)
+    selected_abs = st.multiselect(
+        "🔍 选择本次实验使用的抗体", 
+        options,
+        key="deduct_selections"
+    )
+    
+    deduction_dict = {}
+    if selected_abs:
+        st.markdown("<p style='font-size: 0.9rem; font-weight: 600; color: #4ecca3; margin-top: 10px;'>👇 请设定单管消耗量 (µL)：</p>", unsafe_allow_html=True)
+        for sel in selected_abs:
+            name_display = sel.split("] ")[1].split(" (")[0]
+            deduction_dict[sel] = st.number_input(f"💧 {name_display}", min_value=0.1, value=1.0, step=0.5, key=f"vol_{sel}")
+    
+    st.write("")
+    
+    # 💡 惊喜：因为脱离了表单牢笼，它现在是个常规按钮。
+    # 它会自动继承你最上方“同步数据”那套极其优雅的白底青绿渐变 UI，左侧边栏视觉更统一！
+    submitted_batch = st.button("⚡ 确认扣减选定用量", use_container_width=True)
+    
+    if submitted_batch:
+        if not selected_abs:
+            st.error("⚠️ 请先在上方选择你使用的抗体！")
+        else:
+            updated_df = st.session_state.df.copy()
             for sel in selected_abs:
-                name_display = sel.split("] ")[1].split(" (")[0]
-                deduction_dict[sel] = st.number_input(f"💧 {name_display}", min_value=0.1, value=1.0, step=0.5, key=sel)
-        
-        st.write("")
-        submitted_batch = st.form_submit_button("⚡ 确认扣减选定用量", use_container_width=True)
-        
-        if submitted_batch:
-            if not selected_abs:
-                st.error("⚠️ 请先在上方选择你使用的抗体！")
-            else:
-                updated_df = st.session_state.df.copy()
-                for sel in selected_abs:
-                    idx = int(sel.split("]")[0].replace("[", ""))
-                    consumed_vol = deduction_dict[sel]
-                    
-                    old_vol = updated_df.at[idx, 'Volume']
-                    
-                    # 👑 究极防崩溃装甲：全面拦截 None、NaN、纯空格和各种诡异空白
-                    if pd.notna(old_vol) and old_vol is not None and str(old_vol).strip() != "":
-                        try:
-                            new_vol = max(0.0, float(old_vol) - float(consumed_vol))
-                            updated_df.at[idx, 'Volume'] = new_vol
-                            
-                            # 智能状态联动
-                            if new_vol == 0.0:
-                                updated_df.at[idx, 'Status'] = "Empty (待采购)"
-                            elif new_vol <= 10.0 and updated_df.at[idx, 'Status'] == "In Use (使用中)":
-                                updated_df.at[idx, 'Status'] = "Low (快用完)"
-                        except (ValueError, TypeError):
-                            # 万一碰上其它神仙数据，默默跳过，保护主程序不崩
-                            pass
-                            
-                save_data(updated_df)
-                st.success("✅ 操作成功！(注: 未记录初始体积的抗体已被自动跳过扣减)")
-                st.rerun()
+                idx = int(sel.split("]")[0].replace("[", ""))
+                consumed_vol = deduction_dict[sel]
+                
+                old_vol = updated_df.at[idx, 'Volume']
+                
+                # 👑 究极防崩溃装甲：无视所有非数字异常
+                if pd.notna(old_vol) and old_vol is not None and str(old_vol).strip() != "":
+                    try:
+                        new_vol = max(0.0, float(old_vol) - float(consumed_vol))
+                        updated_df.at[idx, 'Volume'] = new_vol
+                        
+                        # 智能状态联动
+                        if new_vol == 0.0:
+                            updated_df.at[idx, 'Status'] = "Empty (待采购)"
+                        elif new_vol <= 10.0 and updated_df.at[idx, 'Status'] == "In Use (使用中)":
+                            updated_df.at[idx, 'Status'] = "Low (快用完)"
+                    except (ValueError, TypeError):
+                        pass
+                        
+            save_data(updated_df)
+            
+            # ✅ 核心修复：扣减成功后，手动将下拉框清理干净，迎接下一次实验
+            st.session_state.deduct_selections = []
+            
+            st.success("✅ 操作成功！(注: 未记录初始体积的抗体已被自动跳过扣减)")
+            st.rerun()
 
     st.markdown("<div style='margin: 15px 0;'></div>", unsafe_allow_html=True)
 
