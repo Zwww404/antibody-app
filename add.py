@@ -141,16 +141,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 流式抗体管理系统</h1>", unsafe_allow_html=True)
-# 💎 顶部高亮专属开发者徽章
-st.markdown("""
-    <div style='text-align: center; margin-top: 1rem; margin-bottom: 2.5rem; position: relative;'>
-        <h1 style='color: #0f172a; margin-bottom: 0.8rem; font-weight: 800;'>🔬 肿瘤免疫流式抗体库存系统</h1>
-        <div style='display: inline-flex; align-items: center; background: linear-gradient(135deg, #4ecca3 0%, #45b894 100%); color: white; padding: 6px 18px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 4px 10px -2px rgba(78, 204, 163, 0.4); letter-spacing: 0.5px;'>
-            <span>⚡ Designed & Developed by ZJW</span>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; margin-bottom: 2rem;'>🔬 流式抗体管理系统</h1>", unsafe_allow_html=True)
 
 DATA_FILE = "antibodies.csv"
 EXPECTED_COLS = ["Target", "Fluorophore", "Localization", "Clone", "Box_Location", "Status"]
@@ -316,7 +307,7 @@ with col_left:
     st.markdown("""
         <div style="background: linear-gradient(135deg, rgba(78,204,163,0.08) 0%, rgba(78,204,163,0.02) 100%); border: 1px solid rgba(78,204,163,0.3); padding: 22px; border-radius: 16px; margin-top: 2rem; box-shadow: 0 4px 15px -5px rgba(0,0,0,0.05);">
             <p style="margin: 0; color: #64748b; font-size: 0.8rem; font-weight: 700; letter-spacing: 1.5px;">SYSTEM ARCHITECT</p>
-            <p style="margin: 5px 0 0 0; color: #4ecca3; font-size: 1.6rem; font-weight: 800;">ZJW <span style="font-size: 1.2rem;">⚡</span></p>
+            <p style="margin: 5px 0 0 0; color: #4ecca3; font-size: 1.6rem; font-weight: 800;">ZJW <span style="font-size: 1.2rem;"
             <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 0.85rem;">Flow Cytometry Inventory V1.0</p>
         </div>
     """, unsafe_allow_html=True)
