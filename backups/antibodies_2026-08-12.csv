@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+CD8,PE,Intranuclear (核内),,,In Use (使用中),
 CD4,PB,Surface (表面),295.0,,In Use (使用中),
 CD8,PE,Intracellular (胞内),6.0,,,
 CD103,PE,Intracellular (胞内),9.0,,,
