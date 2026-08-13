@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+T-bet,BV421,Intranuclear (核内),,,In Use (使用中),
 PD-1,BV510,Surface (表面),,,In Use (使用中),
 Ly108,PE,Surface (表面),,,In Use (使用中),
 Ly108,APC,Surface (表面),,,In Use (使用中),
