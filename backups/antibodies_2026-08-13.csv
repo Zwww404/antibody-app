@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+CD45,FITC,Surface (表面),,,In Use (使用中),
 CD8a,PC5.5,Surface (表面),,,In Use (使用中),
 CD4,BV605,Surface (表面),,,In Use (使用中),
 CD4,PE,Surface (表面),,,In Use (使用中),
