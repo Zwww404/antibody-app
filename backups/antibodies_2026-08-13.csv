@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+EOMES,PE,Intranuclear (核内),,,In Use (使用中),
 CX3CR1,PC5.5,Surface (表面),,,In Use (使用中),
 CX3CR1,BV421,Surface (表面),,,In Use (使用中),
 CXCR5,PE,Surface (表面),,,In Use (使用中),
