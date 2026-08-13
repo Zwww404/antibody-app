@@ -151,12 +151,21 @@ DATA_FILE = "antibodies.csv"
 EXPECTED_COLS = ["Target", "Fluorophore", "Localization", "Volume", "Box_Location", "Status", "Clone"]
 
 def load_data():
-    if not os.path.exists(DATA_FILE):
-        df = pd.DataFrame(columns=EXPECTED_COLS)
-        df.to_csv(DATA_FILE, index=False)
-        return df
+    """强制从 GitHub 提取最新真理数据"""
+    # 你的专属仓库 Raw 链接
+    GITHUB_RAW_URL = "https://raw.githubusercontent.com/Zwww404/antibody-app/main/antibodies.csv"
     
-    df = pd.read_csv(DATA_FILE)
+    try:
+        # 核心：直接从云端强拉数据
+        df = pd.read_csv(GITHUB_RAW_URL)
+    except Exception:
+        # 兜底：如果连不上网，再读本地
+        if not os.path.exists(DATA_FILE):
+            df = pd.DataFrame(columns=EXPECTED_COLS)
+            df.to_csv(DATA_FILE, index=False)
+            return df
+        df = pd.read_csv(DATA_FILE)
+    
     # 兼容中英文旧表头
     rename_map = {
         "靶点 (Target)": "Target", "靶点(Target)": "Target",
@@ -372,6 +381,7 @@ with col_left:
                 vol_to_save = new_volume if new_volume is not None else ""
                 new_row = pd.DataFrame([[new_target, new_fluor, new_loc, vol_to_save, new_box, new_status, ""]], columns=EXPECTED_COLS)
                 updated_df = pd.concat([new_row, st.session_state.df], ignore_index=True)
+                st.session_state.df = updated_df
                 save_data(updated_df)
                 st.session_state.table_key = st.session_state.get("table_key", 0) + 1
                 st.rerun()
@@ -436,7 +446,7 @@ with col_left:
                                 updated_df.at[idx, 'Status'] = "Low (快用完)"
                         except (ValueError, TypeError):
                             pass
-                            
+                          
                 save_data(updated_df)
                 st.session_state.deduct_key_counter += 1
                 # 👑 强刷信号：扣减完成后强制右侧刷新！
@@ -547,15 +557,29 @@ with col_right:
         hide_index=True
     )
 
-    # 👑 究极防覆盖判定：全部转成字符串再对比，彻底无视 None/NaN/空白 转换导致的判定混乱！
+  # 👑 核心优化：智能识别过滤状态下的操作 (双击修改 或 垃圾桶删除)
+    # 将 NaN 转为空字符串再转为 str 进行严格的无差别对比
     if not edited_df.fillna("").astype(str).equals(filtered_df.fillna("").astype(str)):
+        
         if is_filtered:
-            # 修改时，需调取最新基底数据 df 进行 update
             current_df = st.session_state.df.copy()
-            current_df.update(edited_df)
-            save_data(current_df)
+            
+            # 操作 1：处理垃圾桶删除 -> 找出在 filtered_df 中存在，但在 edited_df 中消失的索引
+            deleted_indices = set(filtered_df.index) - set(edited_df.index)
+            if deleted_indices:
+                current_df = current_df.drop(index=list(deleted_indices))
+                
+            # 操作 2：精准覆盖修改 -> 🚀 弃用有缺陷的 .update()，改用 .loc 强行覆盖（允许彻底清空单元格）
+            current_df.loc[edited_df.index] = edited_df
+            
+            st.session_state.df = current_df
         else:
-            save_data(edited_df)
-        # 表格内部修改也发送信号
-        st.session_state.table_key = st.session_state.get("table_key", 0) + 1
-        st.rerun()
+            # 如果没在筛选状态，直接覆盖即可
+            st.session_state.df = edited_df.copy()
+            
+        # 调用引擎存储到 GitHub
+        save_data(st.session_state.df)
+        
+        # 🚀 【核心修复】：彻底删除了这里的 st.rerun() 和 table_key 增加！
+        # 让 st.data_editor 自己维护连续编辑的焦点，不再强制闪屏刷新
+        st.toast("✅ 表格修改已静默同步至云端！", icon="☁️")
