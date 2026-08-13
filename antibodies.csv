@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+TNF-α,BV421,Intracellular (胞内),,CJY,In Use (使用中),
 IFN-γ,PC5.5,Intracellular (胞内),,CJY,In Use (使用中),
 CD74,AF647,Surface (表面),,CJY,In Use (使用中),
 CD62L,PE-CF594,Surface (表面),,CJY,In Use (使用中),
