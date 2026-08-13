@@ -1,6 +1,6 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
 Bcl-6,PC5.5,Intranuclear (核内),,新,In Use (使用中),
-IL-9,PC5.5,Intracellular (胞内),,,In Use (使用中),
+IL-9,PC5.5,Intracellular (胞内),,新,In Use (使用中),
 TIGIT,BV421,Surface (表面),,,In Use (使用中),
 TCRγδ,PE,Surface (表面),,,In Use (使用中),
 TCR β（vb6）,APC,Surface (表面),,,In Use (使用中),
