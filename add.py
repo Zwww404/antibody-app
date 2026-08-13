@@ -557,29 +557,44 @@ with col_right:
         hide_index=True
     )
 
-  # 👑 核心优化：智能识别过滤状态下的操作 (双击修改 或 垃圾桶删除)
-    # 将 NaN 转为空字符串再转为 str 进行严格的无差别对比
-    if not edited_df.fillna("").astype(str).equals(filtered_df.fillna("").astype(str)):
+  # ==========================================
+    # 👑 核心优化：无感防卡顿机制与批量修改支持
+    # ==========================================
+    # 1. 实时侦测：判断你在表格上的操作(edited_df)与原数据(filtered_df)是否有差异
+    has_changes = not edited_df.fillna("").astype(str).equals(filtered_df.fillna("").astype(str))
+
+    # 2. 动态触发：只有当你做了修改，才会弹出保存按钮！
+    if has_changes:
+        st.markdown("""
+        <div style='padding: 12px; background-color: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 6px; margin: 15px 0;'>
+            <span style='color: #d97706; font-weight: 600; font-size: 0.95rem;'>
+                ⚠️ 检测到表格数据已更改（支持连续修改多行/多列，确认无误后请点击下方保存）
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
         
-        if is_filtered:
-            current_df = st.session_state.df.copy()
-            
-            # 操作 1：处理垃圾桶删除 -> 找出在 filtered_df 中存在，但在 edited_df 中消失的索引
-            deleted_indices = set(filtered_df.index) - set(edited_df.index)
-            if deleted_indices:
-                current_df = current_df.drop(index=list(deleted_indices))
+        # 批量保存按钮
+        if st.button("💾 确认同步所有修改至云端", type="primary", use_container_width=True):
+            with st.spinner("🚀 正在将批量修改同步至 GitHub，请稍候..."):
+                if is_filtered:
+                    current_df = st.session_state.df.copy()
+                    
+                    # 操作 1：处理垃圾桶删除 (精准定位消失的索引)
+                    deleted_indices = set(filtered_df.index) - set(edited_df.index)
+                    if deleted_indices:
+                        current_df = current_df.drop(index=list(deleted_indices))
+                        
+                    # 操作 2：处理所有双击修改 (完美覆盖，支持清空单元格)
+                    current_df.loc[edited_df.index] = edited_df
+                    
+                    st.session_state.df = current_df
+                else:
+                    # 未筛选状态下，直接全局覆盖
+                    st.session_state.df = edited_df.copy()
+                    
+                # 🚀 统一执行一次耗时的云端存储，彻底消灭卡顿！
+                save_data(st.session_state.df)
                 
-            # 操作 2：精准覆盖修改 -> 🚀 弃用有缺陷的 .update()，改用 .loc 强行覆盖（允许彻底清空单元格）
-            current_df.loc[edited_df.index] = edited_df
-            
-            st.session_state.df = current_df
-        else:
-            # 如果没在筛选状态，直接覆盖即可
-            st.session_state.df = edited_df.copy()
-            
-        # 调用引擎存储到 GitHub
-        save_data(st.session_state.df)
-        
-        # 🚀 【核心修复】：彻底删除了这里的 st.rerun() 和 table_key 增加！
-        # 让 st.data_editor 自己维护连续编辑的焦点，不再强制闪屏刷新
-        st.toast("✅ 表格修改已静默同步至云端！", icon="☁️")
+                # 增加 table_key 发送强刷信号，让表格恢复干净状态
+                # st.session_state.table_key = st.session_state.get("table_key", 0) + 1
+                st.rerun()
