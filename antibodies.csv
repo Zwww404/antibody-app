@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+CD103,BV510,Surface (表面),,,In Use (使用中),
 CD138,BV785,Surface (表面),,,In Use (使用中),
 CD73,FITC,Surface (表面),,,In Use (使用中),
 PH0SPHO,FITC,Surface (表面),,,In Use (使用中),
