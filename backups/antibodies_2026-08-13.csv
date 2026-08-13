@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+TGF-β1,APC,Intracellular (胞内),,CJY,In Use (使用中),
 IL-10,PE,Intracellular (胞内),,CJY,In Use (使用中),
 T-bet,BV785,Intranuclear (核内),,CJY,In Use (使用中),
 FOXP3,BV421,Intranuclear (核内),,CJY,In Use (使用中),
