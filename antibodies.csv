@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+F4/80,FITC,Surface (表面),,髓系,In Use (使用中),
 CD19,PE,Surface (表面),,髓系,In Use (使用中),
 CD86,PE,Surface (表面),,髓系,In Use (使用中),
 CD19,PB,Surface (表面),,髓系,In Use (使用中),
