@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+IL-9,APC,Intracellular (胞内),,,In Use (使用中),
 LAG-3,APC,Surface (表面),,,In Use (使用中),
 Ki-67,FITC,Intranuclear (核内),,,In Use (使用中),
 ICOS,FITC,Surface (表面),,,In Use (使用中),
