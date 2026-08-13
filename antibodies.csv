@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+CXCR5,PE,Surface (表面),,,In Use (使用中),
 Ly-6A/E(Sca-1)),FITC,Surface (表面),,,In Use (使用中),
 FOXP3,FITC,Intranuclear (核内),,,In Use (使用中),
 SATB1,AF647,Intranuclear (核内),,,In Use (使用中),
