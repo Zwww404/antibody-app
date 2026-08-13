@@ -554,7 +554,7 @@ with col_right:
             "Status": st.column_config.SelectboxColumn("🚥 状态", options=["In Use (使用中)", "Low (快用完)", "Empty (待采购)", "Expired (已过期)"]),
             "Clone": st.column_config.TextColumn("🏷️ 克隆号")
         },
-        hide_index=True
+        hide_index=FALSE
     )
 
   # ==========================================
