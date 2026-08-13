@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+CD62L,PE-CF594,Surface (表面),,CJY,In Use (使用中),
 CD25,PE-CF594,Surface (表面),,CJY,In Use (使用中),
 CD8a,BV785,Surface (表面),,CJY,In Use (使用中),
 ST-2,BV421,Surface (表面),,旧,In Use (使用中),
