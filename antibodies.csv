@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+STAT3 Phosphorus ,FITC,Intranuclear (核内),,髓系,In Use (使用中),
 CD244,FITC,Surface (表面),,髓系,In Use (使用中),
 CD11b,PC7,Surface (表面),,髓系,In Use (使用中),
 CD101,AF700,Surface (表面),,髓系,In Use (使用中),
