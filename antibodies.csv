@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+Tim-3,bv605,Surface (表面),,,In Use (使用中),
 IL-7aA,APC,Surface (表面),,,In Use (使用中),
 IKZF-2,PE,Intranuclear (核内),,,In Use (使用中),
 KLRG-1,BV785,Surface (表面),,,In Use (使用中),
