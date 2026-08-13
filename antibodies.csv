@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+FOXP3,PB,Intranuclear (核内),,,In Use (使用中),
 CTLA-4,PE(EBIOS),Surface (表面),,,In Use (使用中),
 CD103,PB,Surface (表面),,,In Use (使用中),
 Tim-3,bv605,Surface (表面),,,In Use (使用中),
