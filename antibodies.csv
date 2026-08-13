@@ -1,6 +1,6 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
 EOMES,FITC,Intranuclear (核内),,旧,In Use (使用中),
-TGF-β1,PC5.5,Surface (表面),,旧,In Use (使用中),
+TGF-β1,PC5.5,Intracellular (胞内),,旧,In Use (使用中),
 GZMB,FITC,Intracellular (胞内),,旧,In Use (使用中),
 CD49b,FITC,Surface (表面),,旧,In Use (使用中),
 IL-10,FITC,Surface (表面),,旧,In Use (使用中),
