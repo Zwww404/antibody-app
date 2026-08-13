@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+KLRG1,FITC,Surface (表面),,旧,In Use (使用中),
 TCR-γδ,FITC,Surface (表面),,旧,In Use (使用中),
 IL-4,FITC,Surface (表面),,旧,In Use (使用中),
 EOMES,FITC,Intranuclear (核内),,旧,In Use (使用中),
