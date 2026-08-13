@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+CD4,PB,Surface (表面),,旧,In Use (使用中),
 IL-17A,AC7,Surface (表面),,旧,In Use (使用中),
 CD62L,PC7,Surface (表面),,旧,In Use (使用中),
 IL-10,APC,Intracellular (胞内),,旧,In Use (使用中),
