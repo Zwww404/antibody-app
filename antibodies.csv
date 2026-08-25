@@ -1,4 +1,5 @@
 Target,Fluorophore,Localization,Volume,Box_Location,Status,Clone
+humanCD19,PE,Surface (表面),,旧,In Use (使用中),
 CD103,BV510,Surface (表面),,髓系,In Use (使用中),
 CD138,BV785,Surface (表面),,髓系,In Use (使用中),
 CD73,FITC,Surface (表面),,髓系,In Use (使用中),
